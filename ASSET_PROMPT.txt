@@ -1,0 +1,4 @@
+Mode: built-in image_gen, identity-preserve edit, transparent background.
+Reference: existing approved keeper default sprite, assets/4b41bc693ba722b19639.webp from original 2D distribution.
+Prompt: Extend this exact Keeper character into a FULL BODY game sprite, head to toe entirely visible with generous clear margins above top hat and below shoes. Preserve exact face identity, auburn slightly curly hair, golden eyes, ivory domino mask, ornate forest green and gold uniform, white ruffled cravat and top hat, delicate otome watercolor ink illustration style. Adult handsome male standing with welcoming gentle smile, relaxed white gloved hands, matching long green tailcoat, fitted dark trousers and elegant black boots. Single isolated character on actual transparent alpha background, no scenery, no floor, no text. Full body portrait needed as 2D billboard inside 3D game.
+Output: assets/keeper-full.png (RGBA, 1024x1536).

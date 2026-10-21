@@ -1,0 +1,10 @@
+const fs=require('node:fs'),path=require('node:path');
+const root=__dirname,out=path.join(root,'..','outputs');fs.mkdirSync(out,{recursive:true});
+const upper='data:image/webp;base64,'+fs.readFileSync(path.join(root,'assets/keeper-upper.webp')).toString('base64');
+const full='data:image/png;base64,'+fs.readFileSync(path.join(root,'assets/keeper-full.png')).toString('base64');
+let html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
+const js=fs.readFileSync(path.join(root,'game.js'),'utf8').replaceAll('assets/keeper-full.png',full);
+html=html.replace('<link rel="stylesheet" href="style.css">',()=>'<style>'+css+'</style>').replace('src="assets/keeper-upper.webp"','src="'+upper+'"').replace('<script src="game.js"></script>',()=>'<script>'+js+'</script>');
+fs.writeFileSync(path.join(out,'neverland-v2-play.html'),html);fs.writeFileSync(path.join(root,'play.html'),html);
+console.log('Packaged: dialogue upper-body overlay; world full-body billboard.');
