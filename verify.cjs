@@ -9,13 +9,16 @@ function frames(n){for(let i=0;i<n;i++){ms+=1000/60;raf(ms);}}
 function closeDialogue(){while(!el('dialog').hidden)el('next').onclick();}
 assert.equal(state().keeperVisible,false);frames(2);assert(draws>0);assert.equal(state().keeperLoaded,true);
 el('start').onclick();assert(state().started);run("keys.add('w')");frames(250);run('keys.clear()');assert.equal(state().phase,2);assert(state().keeperVisible);assert(!el('dialog').hidden);closeDialogue();
+run('player.x=0;player.z=-6');frames(1);assert.equal(state().currentMap,'deck');assert.equal(state().player.z,-4.9);
 // Follow physical coordinates, independently testing proximity and wall collision.
 assert.equal(run('valid(-6,13)'),false);assert.equal(run('valid(0,7)'),true);assert.equal(run('valid(0,-70)'),false);
 run('player.x=-2;player.z=-.2');frames(1);assert.equal(state().active,'keeper');el('interact').onclick();closeDialogue();assert(state().met);
 run('player.x=3;player.z=5.3');frames(1);assert.equal(state().active,'captain');el('interact').onclick();assert(state().firstRide);assert.equal(state().phase,3);const accident=[...timers.values()].find(t=>t.ms===7500);assert(accident);accident.f();closeDialogue();assert.equal(state().player.z,10);assert(state().cleared.includes('captain'));
+run('player.x=0;player.z=-6');el('instructions').hidden=false;frames(1);assert.equal(state().currentMap,'deck');el('instructions').hidden=true;frames(1);assert.equal(state().currentMap,'park');assert.equal(state().player.z,-12);frames(3);assert.equal(state().currentMap,'park');
 for(const [id,x,z] of [['wheel',-17,-21.6],['carousel',17,-20.6],['mirror',-18,-40.6],['tea',16,-40.6]]){run(`player.x=${x};player.z=${z}`);frames(1);assert.equal(state().active,id);el('interact').onclick();assert(state().cleared.includes(id));}
 assert.equal(state().cleared.length,5);assert(el('chapter').textContent.includes('다섯 개의 기억'));
+run('player.x=0;player.z=-8.5');frames(1);assert.equal(state().currentMap,'deck');frames(3);assert.equal(state().currentMap,'deck');
 run('player.x=-2;player.z=-.2');frames(1);el('interact').onclick();assert(el('line').textContent.includes('다섯 개'));closeDialogue();
 el('sound').onclick();assert.equal(el('sound')['aria-pressed'],'true');el('sound').onclick();assert.equal(el('sound')['aria-pressed'],'false');
-el('restart').onclick();assert.equal(state().started,false);assert.equal(state().cleared.length,0);assert.equal(state().keeperVisible,false);frames(3);
-console.log('PASS: renderer calls, keeper asset, walking, doorway/walls/bounds, first encounter, dialogue, physical proximity, lever, accident/reset, all 5 rides, completion, mute, restart.');
+el('restart').onclick();assert.equal(state().currentMap,'deck');assert.equal(state().started,false);assert.equal(state().cleared.length,0);assert.equal(state().keeperVisible,false);frames(3);
+console.log('PASS: renderer calls, keeper asset, walking, doorway/walls/bounds, first encounter, dialogue, physical proximity, lever, accident/reset, all 5 rides, completion, locked gateway, map entry/return, help pause, mute, restart.');
