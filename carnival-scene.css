@@ -3,3 +3,7 @@
 #ride-panel{position:fixed;bottom:14px;left:14px;z-index:7;padding:12px 15px;border:1px solid #cbaa5d;background:#153e32ee;border-radius:6px;max-width:calc(100vw - 28px);font:12px/1.7 'Malgun Gothic',sans-serif}#ride-panel strong{display:block;color:#ffe3a0}#ride-panel progress{width:100%;accent-color:#d9b04f}#ride-panel button{font-size:11px;padding:7px 9px;margin:5px 4px 0 0}.inside-ride #world-interact{bottom:140px}.inside-ride #world-caption{bottom:195px}.inside-ride #walk-journal{max-width:300px}@media(pointer:coarse){#ride-panel{bottom:72px}.inside-ride #world-interact{bottom:210px}.inside-ride #world-caption{bottom:260px}}
 .inside-ride #walk-progress{display:none}.inside-ride #walk-journal{font-size:12px}.inside-ride #world-interact{font-size:12px;min-width:180px;max-width:85vw}
 .inside-ride #world-landmarks{display:none!important}
+
+/* Dream theatre: the sky falls away behind luminous scenery. */
+#world-root{background:#010106}header{background:linear-gradient(90deg,#071722,#19243a 45%,#163f32);border-bottom-color:#e5bd65}#walk-journal{background:#081526dc;box-shadow:0 4px 28px #0008}#world-caption{background:#080f20d9}.scenic-mode #world-mobile{display:none!important}
+
