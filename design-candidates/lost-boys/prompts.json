@@ -1,0 +1,52 @@
+{
+  "status": "design candidates only; not integrated",
+  "tool": "built-in image_gen",
+  "reference": "assets/keeper-v3-01-basic.png",
+  "basePrompt": "Use case: stylized-concept. Create a NEW original full-body game NPC design candidate, single character only, head to shoes fully visible, portrait composition with room around silhouette, softly vignetted dark neutral background. The provided Keeper image is STYLE REFERENCE ONLY: closely match its exquisite thin warm linework, luminous watercolor and gouache anime storybook rendering, detailed fabric folds, ornate gold embroidery, delicate face rendering, theatrical fairy-tale elegance. Not photorealistic, not 3D, not chibi. This NPC is a former visitor whose soul is trapped by the Keeper, now a theme park cast member. Subtle melancholy and eerie hospitality, no gore. Shared small gold star cast badge ties them to Keeper but DO NOT copy his hat, red hair, outfit or full mask. Distinctive age accurate face, clear costume design. No text, no labels, no watermark. ",
+  "characters": [
+    {
+      "id": "ferris",
+      "name": "루멘",
+      "role": "관람차 담당, 58세 남성. 가족과 별을 보러 왔다 붙잡힌 은퇴 천문 교사. 다정하지만 내려오는 시간을 기억하지 못한다.",
+      "desc": "Clearly older man around 58, visible fine wrinkles, lean long silhouette, gentle weary face. Astronomer ferris-wheel cast uniform, navy and antique gold, constellation embroidery, gondola-key pendant and pocket star chart.",
+      "variants": [
+        "silver swept-back hair, half-moon spectacles, long navy tailcoat with astrolabe shoulder cape, star-chart staff",
+        "salt-and-pepper wavy shoulder-length hair, round spectacles, short gold-trimmed observatory jacket and long scarf, brass telescope",
+        "white braided low ponytail, monocle, layered midnight blue ceremonial robe-coat with wheel-spoke embroidery, mechanical pocket watch"
+      ]
+    },
+    {
+      "id": "carousel",
+      "name": "로제",
+      "role": "회전목마 담당, 17세 여성. 동생과 놀러 왔다 혼자 남겨진 음악 지망생. 밝게 손님을 맞지만 같은 곡만 반복한다.",
+      "desc": "17-year-old girl, age-appropriate nonsexual cast costume, energetic stance with melancholy eyes. Carousel attendant and musician, ivory burgundy and antique gold, wooden-horse and music-box motifs, ribbon-bound score.",
+      "variants": [
+        "short chestnut bob, burgundy military-band jacket with ivory ruffles, knee-length culotte trousers, small music-box crank",
+        "long dark brown braid, ivory equestrian jacket and burgundy long skirt with horse embroidery, conductor baton",
+        "curly auburn high ponytail, striped puff sleeves, gold-trimmed burgundy waistcoat and tailored trousers, tiny violin"
+      ]
+    },
+    {
+      "id": "mirror",
+      "name": "시온",
+      "role": "거울 미로 담당, 29세 남성. 친구를 찾다 출구와 자신의 얼굴을 잃은 사진가. 말은 정확하지만 거울 속에서는 입을 움직이지 않는다.",
+      "desc": "29-year-old androgynous adult man, slender angular face, guarded expression. Mirror maze cast uniform silver black muted violet, asymmetrical reflective brocade, antique camera charm, fractured diamond motifs. A small partial masquerade mask, never copy Keeper face.",
+      "variants": [
+        "straight chin-length black hair, silver half-mask at temple, asymmetric violet-black long coat, prism pendant",
+        "white-blond slicked hair, tiny cracked eye mask, black velvet short cape and silver ruffled blouse, handheld mirror",
+        "wavy dark violet hair, transparent faceted monocle-mask, high-collar silver brocade tailcoat with black gloves, antique folding camera"
+      ]
+    },
+    {
+      "id": "teacups",
+      "name": "모라",
+      "role": "찻잔 담당, 42세 여성. 생일 나들이 중 붙잡힌 제과사. 손님 취향을 기억하지만 자신의 생일은 잊었다. 웃으며 바깥 세상의 맛을 묻는다.",
+      "desc": "42-year-old woman, visibly mature face with smile lines, warm stocky build, welcoming but haunted gaze. Teacup ride hostess and pastry chef, jade cream dusty rose antique gold, porcelain teacup and spiral motifs, tea timer charm.",
+      "variants": [
+        "dark brown hair in soft bun, jade tea-service gown with practical apron and porcelain-gold collar, teapot",
+        "short curly black hair with grey streak, rose striped blouse and jade culotte trousers, cream embroidered waistcoat, stacked teacup tray",
+        "long brown-grey braid crown, cream ruffled shirt and jade long skirt, dusty rose fitted jacket and tea-leaf hat, brass tea timer"
+      ]
+    }
+  ]
+}
