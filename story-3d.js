@@ -5,16 +5,34 @@ const original3d={say,modal,close,newGame,intro,tutorial,hub,map,arriveAtRide,op
 let free3d=false,intro3d=false,firstLever3d=false,atControl3d=false,atExit3d=false,target3d=null,confronting3d=false;
 const controls3d=window.NEVERLAND_LAYOUT.rides.map(r=>r.control);
 const cluePositions3d=window.NEVERLAND_LAYOUT.clues;
-let pendingRideResult=null;
-function updateRideUI(){const state=world3d.state,d=state.interior;$('ride-panel').hidden=!d;document.body.classList.toggle('inside-ride',!!d);if(!d)return;const roaming=$('stage').classList.contains('walking')&&!$('overlay').children.length;$('ride-status').textContent=d.running?'탑승 중 · '+Math.round(d.progress*100)+'%':d.ride===3?(d.solved?'봉인 해제 · 반대편 빛의 문으로 걸어가세요.':'거울 사이로 길을 찾아 빛 장치를 조작하세요.'):d.seated?'좌석에 앉았습니다 · E로 조작 / Q로 일어나기':'기구 안을 걸어 둘러보세요 · 좌석 근처에서 E';$('ride-progress').value=d.progress;$('ride-progress').hidden=!d.running;$('ride-operate').disabled=d.running||!roaming||(d.ride!==3&&!d.seated);$('ride-stand').disabled=d.running||!d.seated||!roaming;$('ride-return').disabled=d.running||!roaming;}
+let pendingRideResult=null,forcedRide3d=null;
+function updateRideUI(){const state=world3d.state,d=state.interior;if(state.passage)return;$('ride-panel').hidden=!d;document.body.classList.toggle('inside-ride',!!d);if(!d)return;const roaming=$('stage').classList.contains('walking')&&!$('overlay').children.length;$('ride-status').textContent=d.running?'탑승 중 · '+Math.round(d.progress*100)+'%':d.ride===3?(d.solved?'봉인 해제 · 반대편 빛의 문으로 걸어가세요.':'거울 사이로 길을 찾아 빛 장치를 조작하세요.'):d.seated?'좌석에 앉았습니다 · E로 조작 / Q로 일어나기':'기구 안을 걸어 둘러보세요 · 좌석 근처에서 E';$('ride-progress').value=d.progress;$('ride-progress').hidden=!d.running;$('ride-operate').disabled=d.running||!roaming||(d.ride!==3&&!d.seated);$('ride-stand').disabled=d.running||!d.seated||!roaming||forcedRide3d!==null;$('ride-return').disabled=d.running||!roaming||forcedRide3d!==null;}
 function returnToPark(){if(!world3d.leaveRide()){world3d.notify('움직이는 동안에는 탑승을 마칠 때까지 기다려 주세요.');return;}pendingRideResult=null;explore3d('기구 입구로 돌아왔습니다. 다른 구역을 걸어서 둘러보세요.');}
 function interiorMap3d(){const state=world3d.state,d=window.NEVERLAND_INTERIORS[state.interior.ride],b=d.bounds,p=state.player;modal('<h1>'+d.name+'</h1><p>붉은 점은 현재 위치, 금빛 원은 좌석, 초록 문은 공원으로 돌아가는 곳입니다.</p><div class="position-map"><svg viewBox="'+(b[0]-2)+' '+(b[2]-2)+' '+(b[1]-b[0]+4)+' '+(b[3]-b[2]+4)+'" role="img" aria-label="놀이기구 내부 지도"><rect x="'+b[0]+'" y="'+b[2]+'" width="'+(b[1]-b[0])+'" height="'+(b[3]-b[2])+'" fill="#e1c993"/>'+d.walls.map(([x,z,w,h])=>'<rect x="'+(x-w/2)+'" y="'+(z-h/2)+'" width="'+w+'" height="'+h+'" fill="#335b4b"/>').join('')+(d.seat?'<circle cx="'+d.seat[0]+'" cy="'+d.seat[1]+'" r=".7" fill="#e4b44b"/>':'')+'<rect x="'+(d.control[0]-.4)+'" y="'+(d.control[1]-.4)+'" width=".8" height=".8" fill="#ad343a"/><circle cx="'+d.exit[0]+'" cy="'+d.exit[1]+'" r=".65" fill="#386a46"/>'+(d.finish?'<circle cx="'+d.finish[0]+'" cy="'+d.finish[1]+'" r=".65" fill="#e7e9ba"/>':'')+'<circle cx="'+p.x+'" cy="'+p.z+'" r=".4" fill="#c43146" stroke="#fff" stroke-width=".15"/></svg></div><button id="inside-map-close">닫기</button>');$('inside-map-close').onclick=()=>explore3d();}
+function keeperRedLevel3d(){return s.exit||confronting3d?1:Math.min(.95,(s.survivedRides||0)*.19);}
+function commitSafeRide3d(help,risk=false){releaseForcedRide3d();s.talks=0;s.survivedRides=(s.survivedRides||0)+1;if(typeof keeperSafeResult3d==='function')keeperSafeResult3d(help,risk);else original3d.success(help,risk);}
+function releaseForcedRide3d(){forcedRide3d=null;world3d.configure({forcedRide:-1});}
+function restrictForcedChoices3d(){
+ if(forcedRide3d===null||s.phase!=='puzzle')return;const actions=$('puzzleActions');if(!actions)return;
+ const buttons=Array.from(actions.children).filter(b=>!b.textContent.includes('돌아가기'));actions.replaceChildren(...buttons);
+ for(const b of buttons){if(b.onclick===b._forcedGuard)continue;const action=b.onclick;b._forcedGuard=function(){action?.();restrictForcedChoices3d();};b.onclick=b._forcedGuard;}
+}
+function requireRide3d(){
+ if(s.phase==='ending'||world3d.state.passage)return;forcedRide3d=s.ride;sync3d();
+ story([['키퍼','질문은 여기까지예요. 자, 이제 타세요. 이번 기구를 마칠 때까지는 다른 곳으로 갈 수 없어요.'],['','키퍼가 출입 고리를 잠근다. 웃는 얼굴과 달리 손에는 망설임이 없다.'],['키퍼','다녀오면 또 이야기해 드릴게요. 저를 기다리게 하지는 말아요.']],()=>{
+  close();world3d.forceBoard(forcedRide3d);atControl3d=true;try{original3d.openPuzzle();}finally{atControl3d=false;}sync3d();
+ });
+}
 function sync3d(){
  if(!s)return;
+ const keeperRed=keeperRedLevel3d();$('keeper-red-matrix').setAttribute('values',[1-keeperRed,0,0,0,keeperRed,0,1-keeperRed,0,0,keeperRed*.02,0,0,1-keeperRed,0,keeperRed*.01,0,0,0,1,0].join(' '));$('keeper').dataset.corruption=String(keeperRed);const veinURL=window.NEVERLAND_KEEPER_VEINS?.maskURL(keeperRed);if(veinURL)$('keeper-vein-image').setAttribute('href',veinURL);
  const roaming=$('stage').classList.contains('walking')&&!$('overlay').children.length&&s.phase!=='ending';
- document.body.classList.toggle('exploring',roaming);
+ const inPassage=!!world3d.state.passage;document.body.classList.toggle('fracture-walk',inPassage);
+ restrictForcedChoices3d();
+ document.body.classList.toggle('exploring',roaming);document.body.classList.toggle('forced-boarding',forcedRide3d!==null);
  document.getElementById('world-caption').hidden=!roaming;
- world3d.configure({paused:!roaming||!!window.carnivalScene?.overview,free:free3d,intro:intro3d,keeperIntroduced:s.keeperIntroduced,ride:s.ride,cleared:[...s.cleared],clues:[...s.clues],exit:s.exit,exitRide:s.exitRide,target:target3d,confronting:confronting3d});
+ world3d.configure({paused:!roaming||!!window.carnivalScene?.overview,free:free3d,intro:intro3d,keeperIntroduced:s.keeperIntroduced,keeperRed,forcedRide:forcedRide3d===null?-1:forcedRide3d,ride:s.ride,cleared:[...s.cleared],clues:[...s.clues],exit:s.exit,exitRide:s.exitRide,target:target3d,confronting:confronting3d});
+ if(inPassage){$('walk-title').textContent='장막 너머';$('walk-objective').textContent=world3d.state.passage.progress<.8?'W / ↑ · 앞으로 걸으세요.':'그들은 사라진 것이 아니었다. 놀이기구가 되어 남아 있었다.';$('ride-panel').hidden=true;return;}
  $('walk-title').textContent=world3d.state.interior?window.NEVERLAND_INTERIORS[world3d.state.interior.ride].name:rides[s.ride].name+' · 네버랜드';
  $('walk-progress').textContent='정상 탑승 '+s.cleared.size+' / 5 · 조사한 흔적 '+s.clues.size+' / 5';
  updateRideUI();
@@ -29,18 +47,21 @@ say=function(...args){$('stage').classList.remove('walking');original3d.say(...a
 modal=function(html){original3d.modal(html);sync3d();};
 close=function(){original3d.close();sync3d();};
 scene=function(mode){original3d.scene(mode);sync3d();};
-newGame=function(){free3d=false;intro3d=false;firstLever3d=false;target3d=null;confronting3d=false;pendingRideResult=null;window.carnivalScene?.setOverview(false);$('scenic-view').textContent='전체 풍경';$('scenic-view').setAttribute('aria-pressed','false');world3d.reset();$('stage').classList.remove('walking');original3d.newGame();sync3d();};
+newGame=function(){forcedRide3d=null;free3d=false;intro3d=false;firstLever3d=false;target3d=null;confronting3d=false;pendingRideResult=null;window.carnivalScene?.setOverview(false);$('scenic-view').textContent='전체 풍경';$('scenic-view').setAttribute('aria-pressed','false');world3d.reset();$('stage').classList.remove('walking');original3d.newGame();s.survivedRides=0;sync3d();};
 intro=function(){
  world3d.audio();
  story([[s.name,'오랜만에 찾아온 네버랜드. 캡틴 훅을 기다리다가 졸음에 눈을 감았다.','warm'],[s.name,'눈을 뜨니 네버랜드 놀이공원이다. 텅 빈 승차 데크. 폐장했을 텐데 멀리서 음악이 들린다.']],()=>{intro3d=true;target3d=[0,-8];explore3d('선실 문을 지나 그랜드 엔트리 너머 중앙 캡틴 훅으로 걸어가세요. WASD 이동 · Shift 빠르게 걷기');});
 };
 tutorial=function(){firstLever3d=true;target3d=controls3d[0];explore3d('중앙 섬 앞 캡틴 훅 입구에서 E로 승선하세요. 배 안에서 좌석에 앉아 레버를 조작합니다.');};
 hub=function(text){
+ if(forcedRide3d!==null||s.talks>=2){requireRide3d();return;}
  original3d.hub(text);
  if(world3d.state.interior){const other=$('choices').children[2];other.textContent='③ 공원으로 돌아가 다른 기구 찾기';other.onclick=()=>{returnToPark();map();};}
  $('choices').append(btn('④ 직접 걸어 둘러보기',()=>explore3d()));
 };
 map=function(){
+ if(forcedRide3d!==null){world3d.notify('이번 놀이기구를 먼저 마쳐야 합니다.');return;}
+ if(world3d.state.passage)return;
  if(world3d.state.interior){interiorMap3d();return;}
  if(!free3d&&s.phase==='main'&&!intro3d&&!firstLever3d&&s.keeperIntroduced){free3d=true;target3d=null;}
  const p=world3d.state.player;
@@ -59,6 +80,7 @@ map=function(){
  $('backMap').onclick=()=>explore3d();sync3d();
 };
 arriveAtRide=function(i){
+ if(forcedRide3d!==null)return;
  close();s.ride=i;s.visited.add(i);s.talks=0;log('travel');target3d=null;
  explore3d(rides[i].name+' 구역에 도착했습니다. 키퍼, 조작대, 금빛 흔적을 찾아보세요.');
 };
@@ -66,7 +88,7 @@ openPuzzle=function(){
  if(!atControl3d){const inside=world3d.state.interior;if(inside){if(inside.ride!==3&&inside.seated){original3d.openPuzzle();sync3d();return;}explore3d(inside.ride===3?'회랑 안쪽의 빛 장치까지 걸어가 E를 누르세요.':'좌석에 다가가 E로 탑승한 뒤 장치를 조작하세요.');return;}target3d=controls3d[s.ride];explore3d(rides[s.ride].name+' 입구에 다가가 E로 내부 공간에 들어가세요.');return;}
  original3d.openPuzzle();sync3d();
 };
-success=function(help,risk=false){if(world3d.state.interior){close();if(s.ride===3){pendingRideResult={kind:'mirror',help,risk};world3d.unlockInterior();explore3d('거울의 봉인이 풀렸습니다. 회랑 반대편 빛의 출구까지 직접 걸어가세요.');return;}pendingRideResult={kind:'normal',help,risk};if(world3d.startRide()){explore3d('안전 장치가 잠겼습니다. 탑승한 자리에서 주변을 둘러보세요.');return;}pendingRideResult=null;world3d.notify('먼저 좌석에 앉아 주세요.');return;}world3d.animateRide(s.ride);original3d.success(help,risk);sync3d();};
+success=function(help,risk=false){if(world3d.state.interior){close();if(s.ride===3){pendingRideResult={kind:'mirror',help,risk};world3d.unlockInterior();explore3d('거울의 봉인이 풀렸습니다. 회랑 반대편 빛의 출구까지 직접 걸어가세요.');return;}pendingRideResult={kind:'normal',help,risk};if(world3d.startRide()){explore3d('안전 장치가 잠겼습니다. 탑승한 자리에서 주변을 둘러보세요.');return;}pendingRideResult=null;world3d.notify('먼저 좌석에 앉아 주세요.');return;}world3d.animateRide(s.ride);commitSafeRide3d(help,risk);sync3d();};
 finale=function(){
  if(!atExit3d){const p=controls3d[s.exitRide];target3d=[p[0]+4,p[1]+2];explore3d(rides[s.exitRide].name+' 구역의 금빛 출구로 걸어가 E를 누르세요.');return;}
  confronting3d=true;target3d=null;sync3d();world3d.faceExit();
@@ -76,37 +98,52 @@ function investigate3d(){
  if(!s.clues.has(s.ride)){s.clues.add(s.ride);s.N+=2;s.I++;log('explore');}
  story([[s.name,clues[s.ride]]],()=>{checkExit();explore3d(s.exit?rides[s.exitRide].name+' 구역에 새벽빛의 출구가 나타났습니다. 준비가 되면 걸어가세요.':'흔적을 확인했습니다. 다른 구역도 걸어서 둘러보세요.');});
 }
+
+function beginFracture3d(){
+ close();queue=[];after=null;pendingRideResult=null;target3d=null;firstLever3d=false;free3d=false;intro3d=false;
+ window.carnivalScene?.setOverview(false);$('scenic-view').textContent='전체 풍경';$('scenic-view').setAttribute('aria-pressed','false');
+ s.phase='graveyard';$('stage').classList.remove('cut','ride-cutscene','event-cutscene');$('stage').classList.add('walking');
+ world3d.enterPassage();sync3d();
+}
+function finishFracture3d(){
+ document.body.classList.remove('fracture-walk');$('stage').classList.remove('walking','cut');scene('warm');showKeeperPose('06');
+ story([['키퍼','…돌아오셨네요? 어떻게, 그 안쪽까지… 아니에요. 아무 일도 아니에요.'],['키퍼','아, 다행이에요. 다시 만나서 반가워요. 여기서는 저와 함께 즐거운 것만 보시면 돼요.'],['키퍼','다음 놀이기구로 가시겠어요? 어디를 고를지는 당신에게 맡길게요.']],()=>{free3d=true;s.phase='main';map();});sync3d();
+}
+
 world3d.connect(action=>{
  if(action.type==='interior-leave'){returnToPark();return;}
  if(action.type==='interior-seat'){if(world3d.sit())explore3d('탑승했습니다. E 또는 기구 조작 버튼으로 장치를 작동하세요. Q로 일어날 수 있습니다.');return;}
  if(action.type==='ride-running'){world3d.notify('탑승 중입니다. 마우스나 방향키로 주변을 둘러보세요.');return;}
  if(action.type==='mirror-locked'){world3d.notify('빛 장치를 풀어야 이 출구의 봉인이 열립니다.');return;}
- if(action.type==='mirror-finish'){const result=pendingRideResult;if(result?.kind==='mirror'){pendingRideResult=null;world3d.leaveRide();world3d.animateRide(s.ride);original3d.success(result.help,result.risk);sync3d();}return;}
- if(action.type==='ride-complete'){const result=pendingRideResult;pendingRideResult=null;if(result?.kind==='tutorial'){world3d.leaveRide();result.commit();}else if(result?.kind==='normal'){world3d.animateRide(s.ride);original3d.success(result.help,result.risk);}sync3d();return;}
+ if(action.type==='mirror-finish'){world3d.fracturePulse();const result=pendingRideResult;if(result?.kind==='mirror'){pendingRideResult=null;releaseForcedRide3d();world3d.leaveRide();world3d.animateRide(s.ride);commitSafeRide3d(result.help,result.risk);sync3d();}return;}
+ if(action.type==='passage-complete'){finishFracture3d();return;}
+ if(action.type==='ride-complete'){world3d.fracturePulse();const result=pendingRideResult;pendingRideResult=null;if(result?.kind==='tutorial'){world3d.leaveRide();beginFracture3d();}else if(result?.kind==='normal'){world3d.animateRide(s.ride);commitSafeRide3d(result.help,result.risk);}sync3d();return;}
  if(action.type==='intro'){
   intro3d=false;target3d=null;
+  if(typeof keeperOrientation3d==='function'){keeperOrientation3d();return;}
   story([['키퍼','깨어나셨군요. 저는 이곳의 키퍼입니다. 즐거운 시간 되세요.'],['키퍼','출구요? 놀이기구 중 하나가 바깥과 이어져 있어요. 우선 캡틴 훅으로 가볼까요?'],['키퍼','붉은 레버를 STOP에서 GO까지 천천히 밀어주세요. 조명, 미동, 출발 준비… 마지막이 출발입니다.']],tutorial);return;
  }
  if(action.type==='control'){if(world3d.enterRide(action.ride)){target3d=null;explore3d();}return;}
  if(action.type==='interior-control'){
   const inside=world3d.state.interior;if(!inside)return;if(inside.ride!==3&&!inside.seated){world3d.notify('좌석에 가까이 가서 E로 먼저 탑승하세요.');return;}
   target3d=null;atControl3d=true;
-  try{if(firstLever3d){firstLever3d=false;original3d.tutorial();const launch=$('launch').onclick;$('launch').onclick=()=>{close();pendingRideResult={kind:'tutorial',commit:launch};world3d.setRidePower(100);world3d.startRide(8);explore3d('첫 항해가 시작됩니다. 안전 손잡이를 잡고 앞을 바라보세요.');};}else openPuzzle();}finally{atControl3d=false;}
+  try{if(firstLever3d&&typeof keeperFirstBoarding3d==='function'){keeperFirstBoarding3d();}else if(firstLever3d){firstLever3d=false;original3d.tutorial();const launch=$('launch').onclick;$('launch').onclick=()=>{close();pendingRideResult={kind:'tutorial',commit:launch};world3d.setRidePower(100);world3d.startRide(8);explore3d('첫 항해가 시작됩니다. 안전 손잡이를 잡고 앞을 바라보세요.');};}else openPuzzle();}finally{atControl3d=false;}
  }else if(action.type==='keeper'){
-  if(firstLever3d)story([['키퍼','붉은 레버를 STOP에서 GO까지 천천히 밀어주세요.']],tutorial);else hub();
+  if(firstLever3d&&typeof keeperFirstBoardingMenu==='function')keeperBeat([['키퍼','배 안의 좌석에 앉으면 레버를 설명해 드릴게요. 지금은 천천히 둘러봐도 좋아요.']],tutorial);else if(firstLever3d)story([['키퍼','붉은 레버를 STOP에서 GO까지 천천히 밀어주세요.']],tutorial);else hub();
  }else if(action.type==='clue')investigate3d();
  else if(action.type==='exit'){atExit3d=true;try{finale();}finally{atExit3d=false;}}
  sync3d();
 },i=>{if(free3d&&s.phase==='main'){world3d.configure({paused:true});travel(i);sync3d();}});
 $('walking-map').onclick=()=>{if(s.phase!=='ending'&&$('stage').classList.contains('walking'))map();else world3d.notify('이야기나 대화를 마친 뒤 지도에서 현재 위치를 확인하세요.');};
-$('scenic-view').onclick=()=>{if(world3d.state.interior){world3d.notify('공원으로 돌아가면 전체 풍경을 볼 수 있습니다.');return;}if(!window.carnivalScene)return;const v=!window.carnivalScene.overview;window.carnivalScene.setOverview(v);$('scenic-view').textContent=v?'걷기로 돌아가기':'전체 풍경';$('scenic-view').setAttribute('aria-pressed',String(v));sync3d();};
+$('scenic-view').onclick=()=>{if(world3d.state.passage)return;if(world3d.state.interior){world3d.notify('공원으로 돌아가면 전체 풍경을 볼 수 있습니다.');return;}if(!window.carnivalScene)return;const v=!window.carnivalScene.overview;window.carnivalScene.setOverview(v);$('scenic-view').textContent=v?'걷기로 돌아가기':'전체 풍경';$('scenic-view').setAttribute('aria-pressed',String(v));sync3d();};
 $('ride-return').onclick=returnToPark;$('ride-stand').onclick=()=>{if(world3d.stand())explore3d();};$('ride-operate').onclick=()=>{const d=world3d.state.interior;if(d&&!d.running){const n=world3d.state.nearest;if(n?.type==='interior-control')$('world-interact').click();else world3d.notify('장치 또는 좌석에 더 가까이 가세요.');}};
 const originalCaptainMotion=updateCaptainMotion;updateCaptainMotion=function(value){originalCaptainMotion(value);world3d.setRidePower(value);};
 setInterval(updateRideUI,150);
 $('sound').onclick=()=>{const muted=world3d.mute();if(rideAudio)muted?rideAudio.suspend():rideAudio.resume();$('sound').textContent=muted?'소리 꺼짐 ♩':'소리 켜짐 ♫';$('sound').setAttribute('aria-pressed',String(muted));};
 $('walking-help').onclick=()=>{
+ if(world3d.state.passage)return;
  const previous=[...$('overlay').childNodes];
- modal('<h1>네버랜드에서 걷기</h1><p>WASD: 이동 · Shift: 빠르게 걷기<br>마우스 클릭 후 둘러보기 · Esc: 마우스 해제<br>드래그 또는 ← →: 시점 회전<br>E: 가까운 키퍼·조작대·흔적·출구 상호작용</p><p>지도는 현재 위치와 바라보는 방향을 보여줍니다. 구역은 직접 걸어서 이동하세요. 키퍼의 대화와 조작대의 퍼즐, 각 구역의 금빛 흔적을 살피면 길이 열립니다.</p><p>이름·성별·성향, 모든 대화와 선택, 랜덤 이벤트, 다섯 퍼즐과 다섯 엔딩은 원래 2D 이야기와 같습니다. 자동 저장 없이 진행되며 엔딩 기록만 보관합니다.</p><button id="help-close">돌아가기</button>');
+ modal('<h1>네버랜드에서 걷기</h1><p>WASD: 이동 · Shift: 빠르게 걷기<br>마우스 클릭 후 둘러보기 · Esc: 마우스 해제<br>드래그 또는 ← →: 시점 회전<br>E: 가까운 키퍼·조작대·흔적·출구 상호작용</p><p>지도는 현재 위치와 바라보는 방향을 보여줍니다. 구역은 직접 걸어서 이동하세요. 키퍼의 대화와 조작대의 퍼즐, 각 구역의 금빛 흔적을 살피면 길이 열립니다.</p><p>이름·성별·성향, 성향별 대화와 선택, 랜덤 이벤트, 다섯 퍼즐과 다섯 엔딩이 있습니다. 키퍼의 도움과 말이 항상 같은 뜻인지는 직접 확인해 보세요. 자동 저장 없이 진행되며 엔딩 기록만 보관합니다.</p><button id="help-close">돌아가기</button>');
  $('help-close').onclick=()=>{$('overlay').replaceChildren(...previous);sync3d();};
 };
 document.addEventListener('keydown',e=>{
@@ -117,5 +154,5 @@ document.addEventListener('keydown',e=>{
 });
 new MutationObserver(sync3d).observe($('overlay'),{childList:true});
 // Read-only snapshot for QA; narrative state stays in the original engine.
-window.neverland={get state(){return{phase:s.phase,ride:s.ride,gender:s.gender,temper:s.temper,keeperIntroduced:s.keeperIntroduced,visited:[...s.visited],cleared:[...s.cleared],clues:[...s.clues],ending:s.ending,exit:s.exit,free:free3d,world:world3d.state};}};
+window.neverland={get state(){return{forcedRide:forcedRide3d,survivedRides:s.survivedRides||0,keeperRed:keeperRedLevel3d(),phase:s.phase,ride:s.ride,gender:s.gender,temper:s.temper,keeperIntroduced:s.keeperIntroduced,visited:[...s.visited],cleared:[...s.cleared],clues:[...s.clues],ending:s.ending,exit:s.exit,free:free3d,world:world3d.state};}};
 newGame();

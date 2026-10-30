@@ -7,3 +7,10 @@
 /* Dream theatre: the sky falls away behind luminous scenery. */
 #world-root{background:#010106}header{background:linear-gradient(90deg,#071722,#19243a 45%,#163f32);border-bottom-color:#e5bd65}#walk-journal{background:#081526dc;box-shadow:0 4px 28px #0008}#world-caption{background:#080f20d9}.scenic-mode #world-mobile{display:none!important}
 
+
+/* The route beyond the accident deliberately offers only forward movement. */
+.fracture-walk #world-landmarks,.fracture-walk #world-cross,.fracture-walk #world-caption,.fracture-walk #world-interact,.fracture-walk #ride-panel,.fracture-walk #walk-progress{display:none!important}
+.fracture-walk #walking-map,.fracture-walk #walking-help,.fracture-walk #scenic-view{opacity:.3;pointer-events:none}
+.fracture-walk #world-mobile button:not([data-key="w"]){display:none}
+.fracture-walk #walk-journal{background:#08080bd9;border-color:#8e8e96;color:#ddd}.fracture-walk #walk-title{color:#fff}
+.fracture-walk #world-mobile button[data-key="w"]{min-width:110px;background:#121216;border-color:#aaa;color:#fff}

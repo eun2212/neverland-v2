@@ -1,8 +1,8 @@
 {
   "name": "네버랜드: 키퍼의 놀이공원",
-  "version": "2.3.0",
-  "savedAt": "2026-10-26",
-  "edition": "그랜드 카니발 · 다섯 놀이기구 내부 탐험·탑승",
-  "keeper": "원본 대화 표정 16개와 탐험 중 전신 빌보드",
-  "scope": "2D 이야기·퍼즐·이벤트·다섯 엔딩 유지. 공원에서 별도 기구 내부로 이동해 걷기·탑승·조작·탑승 시점 체험."
+  "version": "2.4.0",
+  "savedAt": "2026-10-30",
+  "edition": "악역 키퍼 · 꿈 부정 · 단계별 안내 · 붉은 잠식",
+  "playUrl": "https://neverland-v2-park.cometibex2.chatgpt.site/",
+  "handoff": "HANDOFF.md"
 }

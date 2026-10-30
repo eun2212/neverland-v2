@@ -15,7 +15,7 @@ let frame=null,draws=0;const handlers={},stored=new Map();
 const gl=new Proxy({getShaderParameter:()=>true,getProgramParameter:()=>true,getError:()=>0,drawArrays:()=>draws++},{get:(t,k)=>k in t?t[k]:k===k.toUpperCase()?1:()=>({})});el('world-world').getContext=()=>gl;
 const document={body:new Element('body'),getElementById:el,createElement:()=>new Element(),createElementNS:()=>new Element(),querySelectorAll(q){if(q==='[data-key]')return[];if(q==='.map-help')return[el('map-help')];if(q==='.keeper,.puzzle-portrait')return[el('keeper')];return[];},querySelector:()=>el('dialogue'),addEventListener(){},exitPointerLock(){}};
 const sandbox={console,document,Float32Array,Uint8Array,Set,Map,Math:Object.create(Math),JSON,localStorage:{getItem:k=>stored.get(k)||null,setItem:(k,v)=>stored.set(k,v)},Image:class{set src(v){this.width=1024;this.height=1536;this.onload?.();}},innerWidth:1200,innerHeight:800,devicePixelRatio:1,matchMedia:()=>({matches:false}),HTMLInputElement:class{},HTMLSelectElement:class{},MutationObserver:class{observe(){}},requestAnimationFrame:f=>frame=f,setTimeout:()=>1,clearTimeout(){},setInterval:()=>1,clearInterval(){},addEventListener:(k,f)=>handlers[k]=f};sandbox.window=sandbox;
-vm.createContext(sandbox);for(const file of ['carnival-layout.js','ride-interiors.js','world.js','story-core.js','story-3d.js']){
+vm.createContext(sandbox);for(const file of ['carnival-layout.js','ride-interiors.js','keeper-veins.js','world.js','story-core.js','story-3d.js']){
  let code=fs.readFileSync(path.join(root,file),'utf8');
  if(file==='world.js')code=code.replace(/\}\)\(\);\s*$/,'window.worldQA={valid,player,nearest,updateProgress};})();');
  vm.runInContext(code,sandbox,{filename:file});
@@ -107,7 +107,23 @@ handlers.keydown({key:'e',repeat:false,preventDefault(){}});test(run('world3d.st
 run("worldQA.player.x=-2;worldQA.player.z=0;worldQA.updateProgress()");handlers.keydown({key:'e',repeat:false,preventDefault(){}});test(run('world3d.state.interior.seated'),'physically board captain seat');handlers.keydown({key:'e',repeat:false,preventDefault(){}});test(run('s.phase')==='tutorial','seated lever opens first ride');
 run(`$('lever').oninput({target:{value:'100'}});$('launch').onclick();test(world3d.state.interior.running,'tutorial launches actual ride');`);
 for(let i=0;i<510;i++)frame((i+830)*1000/60);
-run(`drain();test(free3d,'first fixed accident unlocks full park');test(!world3d.state.interior,'first accident returns to park');test(s.cleared.size===0,'first accident is not a normal ride success');`);
+test(!!run('world3d.state.passage'),'first accident opens walkable graveyard instead of image sequence');
+test(run('s.survivedRides||0')===0,'mandatory first death never changes keeper corruption');
+test(!run('world3d.state.interior'),'graveyard leaves the ride interior');
+test(run('s.phase')==='graveyard','graveyard has a separate narrative phase');
+let passageFrame=1340;const passageFrames=n=>{for(let i=0;i<n;i++)frame(passageFrame++*1000/60);};
+handlers.keydown({key:'s',repeat:false,preventDefault(){}});handlers.keydown({key:'a',repeat:false,preventDefault(){}});handlers.keydown({key:'arrowright',repeat:false,preventDefault(){}});passageFrames(120);
+test(run('world3d.state.passage.progress')===0,'backward and sideways input cannot advance graveyard');
+test(run('world3d.state.player.yaw')===0&&run('world3d.state.player.x')===0,'graveyard locks turning and lateral movement');
+for(const key of ['s','a','arrowright'])handlers.keyup({key});
+handlers.keydown({key:'w',repeat:false,preventDefault(){}});passageFrames(360);handlers.keyup({key:'w'});
+const partialPassage=run('world3d.state.passage.progress');test(partialPassage>.2&&partialPassage<.5,'forward walking gradually opens view');passageFrames(30);
+test(run('world3d.state.passage.progress')===partialPassage,'passage never auto-walks without input');
+handlers.keydown({key:'w',repeat:false,preventDefault(){}});passageFrames(1040);handlers.keyup({key:'w'});
+test(run('world3d.state.passage.progress')===1,'whole graveyard visible before return');test(run('world3d.state.passage.revealHold')<3.2,'full revelation has a deliberate viewing hold');passageFrames(100);
+test(!run('world3d.state.passage'),'full revelation automatically teleports to park');test(run('world3d.state.player.z')===-10,'return lands in front of central captain');
+test(run("$('speaker').textContent")==='키퍼'&&run("$('text').textContent").includes('어떻게'),'keeper is surprised immediately after return');
+run(`drain();test(free3d,'graveyard return unlocks full park');test(s.cleared.size===0,'first accident is not a normal ride success');world3d.fracturePulse();test(world3d.state.reality.glitchCount===1,'later ride completion can queue checker glitch');test(world3d.state.reality.glitch>0,'queued checker glitch is active');`);
 test(run('world3d.state.config.paused'),'map pauses walking');
 run("$('backMap').onclick()");test(!run('world3d.state.config.paused'),'map close resumes walking');
 // A flood fill proves each control, clue, keeper and possible exit can be reached from the cabin.
@@ -153,5 +169,24 @@ test(run('world3d.state.exitReveal.age')>6,'reveal finishes after resuming walki
 run(`newGame();test(world3d.state.exitReveal.age===-1&&world3d.state.exitReveal.count===0,'restart clears reveal animation');`);
 run(`startMain();s.exit=false;map();test(!document.querySelector('.position-map svg').children.some(x=>x.id==='map-exit'),'undiscovered exit hidden on map');$('backMap').onclick();s.exit=true;s.exitRide=3;map();const exitMarker=document.querySelector('.position-map svg').children.find(x=>x.id==='map-exit');test(exitMarker&&exitMarker.transform==='translate(-12 3)','discovered exit marked at actual world coordinates');$('backMap').onclick();s.ride=3;worldQA.player.x=-12;worldQA.player.z=4.5;sync3d();test(worldQA.nearest().type==='exit','physical exit triggers confrontation');test(!worldQA.valid(-12,3),'sealed exit blocks passage');atExit3d=true;const pos=JSON.stringify([worldQA.player.x,worldQA.player.z]);finale();atExit3d=false;test(confronting3d,'exit encounter enters confrontation');test(JSON.stringify([worldQA.player.x,worldQA.player.z])===pos,'confrontation keeps player at physical exit');next();next();test($('text').textContent.includes('네버랜드를 떠나지 않았으면'),'keeper wants player to stay');drain();test($('choices').children.length===3,'confrontation leads to original three final approaches');newGame();test(!confronting3d&&!world3d.state.config.exit,'restart clears confrontation and exit');`);
 test(fs.readFileSync(path.join(root,'story-core.js'),'utf8')===reference.match(/<script>([\s\S]*?)<\/script>/)[1],'original story logic byte-for-byte retained');
+run(`startMain();s.ride=1;s.talks=1;topic('keeper');$('choices').children[0].onclick();drain();test(forcedRide3d===1,'second completed conversation forces current ride');test(world3d.state.interior.ride===1&&world3d.state.interior.seated,'forced boarding enters ride and seats player');test(!world3d.leaveRide(),'forced ride blocks return to park');test(!world3d.stand(),'forced ride blocks premature dismount');arriveAtRide(2);test(s.ride===1,'forced ride cannot switch attraction');const oldPhase=s.phase;map();test(s.phase===oldPhase,'map cannot bypass boarding obligation');success(false);test(world3d.state.interior.running,'forced ride still launches physical motion');`);
+for(let i=0;i<1150;i++)frame(1000000+i*1000/60);
+run(`test(forcedRide3d===null&&world3d.state.config.forcedRide===-1,'physical completion releases forced ride');test(s.survivedRides===1&&s.talks===0,'successful forced ride counts once and clears question limit');drain();test(world3d.leaveRide(),'park return available after required ride');newGame();test(forcedRide3d===null,'restart clears boarding obligation');`);
+const veinField=sandbox.NEVERLAND_KEEPER_VEINS.field(),veinSize=sandbox.NEVERLAND_KEEPER_VEINS.dimensions;
+let veinCoverage=0;for(const level of[.19,.38,.57,.76,.95]){const coverage=veinField.reduce((n,v)=>n+(v/255<=level?1:0),0);test(coverage>veinCoverage,'single-origin red coverage increases '+level);veinCoverage=coverage;}
+test(veinField[Math.floor(veinSize[1]*.17)*veinSize[0]+Math.floor(veinSize[0]*.56)]<.19*255,'red originates at mask star');
+test(veinField[0]>.38*255,'early corruption preserves distant original pixels');
+run(`newGame();test(s.survivedRides===0&&keeperRedLevel3d()===0,'new keeper starts in original colors');let previousRed=0;for(let i=1;i<=5;i++){s.survivedRides=i;const red=keeperRedLevel3d();test(red>previousRed&&red<1,'survival tint increases '+i);previousRed=red;}s.exit=true;sync3d();test(keeperRedLevel3d()===1&&world3d.state.config.keeperRed===1,'exit reveals solid red keeper');test($('keeper-red-matrix').values.split(' ').length===20,'portrait uses complete RGBA color matrix');newGame();test(world3d.state.config.keeperRed===0,'restart restores keeper colors');startMain();operate(0);success(true);test(s.survivedRides===1,'survived assisted ride counts');success(false);test(s.survivedRides===2,'survived repeat ride counts');newGame();end(4);test(s.survivedRides===0,'death does not increase corruption');newGame();`);
+test(!fs.readFileSync(path.join(root,'reality-fracture.js'),'utf8').includes('function eye('),'graveyard neon eye geometry removed');
+test(fs.readFileSync(path.join(root,'reality-fracture.js'),'utf8').includes("color:'#ff100a'"),'graveyard accent is scarlet');
+test(fs.readFileSync(path.join(root,'carnival-scene.js'),'utf8').includes(".replace('#include <fog_fragment>'"),'sprite red tint targets an existing shader chunk');
 for(const m of html.matchAll(/(?:src|href)="(assets\/[^"#]+)"/g))test(fs.existsSync(path.join(root,m[1])),'asset exists '+m[1]);
+
+
+for(const level of [.19,.38,.57,.76,.95]){
+ const w=veinSize[0],h=veinSize[1],seen=new Set(),start=veinField.findIndex(v=>v/255<=level),stack=[start];seen.add(start);
+ while(stack.length){const i=stack.pop(),x=i%w,y=Math.floor(i/w);for(const j of [x?i-1:-1,x<w-1?i+1:-1,y?i-w:-1,y<h-1?i+w:-1])if(j>=0&&!seen.has(j)&&veinField[j]/255<=level){seen.add(j);stack.push(j);}}
+ test(seen.size===veinField.reduce((n,v)=>n+(v/255<=level?1:0),0),'connected takeover '+level);
+}
+
 console.log(`PASS: ${assertions} assertions: original content parity, renderer frames/walking, profile, all 18 replies, 5 puzzles and boundaries, help/risk, clues, events/dice, exit proximity, victory/failure, 5 endings, both gender CGs, restart records.`);
