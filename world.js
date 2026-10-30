@@ -69,6 +69,7 @@ function updateProgress(){
 function nearest(){
  if(!started||blocked())return null;
  if(passage)return null;
+ const castAction=window.NEVERLAND_CAST?.nearest(player,interior,config);if(castAction)return castAction;
  if(interior){const d=window.NEVERLAND_INTERIORS[interior.ride],near=p=>p&&Math.hypot(player.x-p[0],player.z-p[1])<1.7;
   if(interior.running)return{type:'ride-running',ride:interior.ride,label:'탑승 중 · 주변을 둘러보세요 ('+Math.round(interior.progress*100)+'%)'};
   if(interior.seated)return{type:'interior-control',ride:interior.ride,label:'E · 앉은 자리에서 기구 조작하기 / Q · 일어나기'};

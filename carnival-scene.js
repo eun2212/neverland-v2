@@ -149,6 +149,7 @@ function render(){requestAnimationFrame(render);const t=clock.getElapsedTime(),s
  const fractureView=fracture.update(state,t);combineMat.uniforms.vision.value=fractureView?fractureView.vision:-1;combineMat.uniforms.aspect.value=w/h;
  if(fractureView){camera.position.copy(fractureView.position);camera.rotation.order='YXZ';camera.rotation.set(fractureView.pitch,fractureView.yaw,0);}
  const interiorKey=state.passage?'graveyard':state.interior?.ride??-1;if(interiorKey!==renderedInterior){renderer.shadowMap.needsUpdate=true;renderedInterior=interiorKey;}
+ window.NEVERLAND_CAST?.render(T,scene,state,t);
  renderBloom(w,h);last=t;
 }
 window.carnivalScene={get overview(){return overview;},setOverview(v){overview=v;document.body.classList.toggle('scenic-mode',v);},get fracture(){return fracture.diagnostics;},get stats(){return{calls:renderer.info.render.calls,triangles:renderer.info.render.triangles,materials:Object.keys(mats).length};}};

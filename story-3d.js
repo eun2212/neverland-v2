@@ -111,6 +111,7 @@ function finishFracture3d(){
 }
 
 world3d.connect(action=>{
+ if(action.type==='cast'||action.type==='cast-clue'){window.NEVERLAND_CAST.interact(action);return;}
  if(action.type==='interior-leave'){returnToPark();return;}
  if(action.type==='interior-seat'){if(world3d.sit())explore3d('탑승했습니다. E 또는 기구 조작 버튼으로 장치를 작동하세요. Q로 일어날 수 있습니다.');return;}
  if(action.type==='ride-running'){world3d.notify('탑승 중입니다. 마우스나 방향키로 주변을 둘러보세요.');return;}
