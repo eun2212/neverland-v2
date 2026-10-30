@@ -1,38 +1,50 @@
-# 로스트보이즈 디자인 후보
+# 로스트보이즈 · 확정 디자인과 새 설정
 
-키퍼 때문에 공원에 붙잡힌 과거 방문객들의 영혼. 캡틴 훅은 제외하고 기구마다 한 명을 배치할 예정입니다. 이 단계에서는 후보를 보관하며 런타임에는 적용하지 않습니다.
+네 명 모두 생전에 놀이공원을 찾은 방문객이었으며, 공원 안에서 사망했다. 키퍼는 각자의 마지막 소망을 이용해 영혼을 붙잡고 놀이기구 캐스트 역할을 반복시킨다. 캐스트라는 이름은 사후에 부여된 역할이다. 사고를 키퍼가 직접 일으켰는지는 아직 확정하지 않는다.
 
-생성: built-in image_gen. 그림체 참조: assets/keeper-v3-01-basic.png. 전체 프롬프트: prompts.json.
+외형 선택: 휠 3 / 로라 2 / 바니쉬 3 / 낸시 1. 이전 인물 설정은 폐기하고 아래 내용으로 대체합니다. 게임 내 배치·대화 구현은 아직 적용하지 않았습니다.
 
-## 루멘
+## 휠 · 관람차 · 3안
 
-관람차 담당, 58세 남성. 가족과 별을 보러 왔다 붙잡힌 은퇴 천문 교사. 다정하지만 내려오는 시간을 기억하지 못한다.
+- 사망 당시: 58세. 야간 개장을 보러 온 방문객.
+- 이미지: ferris-3.png
+- 성격: 예의 바르고 꼼꼼하다. 손님의 인원과 곤돌라 번호를 반복해서 확인하며, 높은 곳에서 보이는 풍경 이야기를 좋아한다.
+- 공원에서의 죽음: 폐장 직전 마지막 관람차에 탔다가 구동 장치 고장으로 정상에서 멈췄다. 구조를 기다리던 중 곤돌라 고정부가 파손돼 추락하여 사망했다.
+- 사후의 캐스트 역할: 키퍼는 ‘마지막 손님이 내리면 퇴근할 수 있다’며 관람차 안내를 맡겼다. 그러나 휠이 인원을 셀 때마다 빈 곤돌라 안에 한 사람이 더 잡힌다. 그 한 사람이 자기 자신이라는 사실을 외면한다.
+- 이상 징후: 안내를 마치면 반드시 ‘내리실 때는 발밑을 보세요’라고 말한다. 회중시계는 사고가 난 시각에서 멈췄다.
+- 대사 예시: “마지막 바퀴입니다. …분명 아까도 그렇게 말씀드렸는데.”
 
-- 1안: silver swept-back hair, half-moon spectacles, long navy tailcoat with astrolabe shoulder cape, star-chart staff. 이미지: ferris-1.png
-- 2안: salt-and-pepper wavy shoulder-length hair, round spectacles, short gold-trimmed observatory jacket and long scarf, brass telescope. 이미지: ferris-2.png
-- 3안: white braided low ponytail, monocle, layered midnight blue ceremonial robe-coat with wheel-spoke embroidery, mechanical pocket watch. 이미지: ferris-3.png
+## 로라 · 회전목마 · 2안
 
-## 로제
+- 사망 당시: 17세. 퍼레이드를 보러 온 방문객.
+- 이미지: carousel-2.png
+- 성격: 명랑하고 승부욕이 강하다. 손님에게 어울리는 목마를 골라 주고, 기다리는 아이들에게 손장단으로 행진곡을 가르친다.
+- 공원에서의 죽음: 퍼레이드 뒤 회전목마에 탑승했다. 운행 도중 장식 천장이 무너졌고, 옆 목마의 어린 손님을 밀어내 구한 뒤 잔해에 맞아 사망했다.
+- 사후의 캐스트 역할: 키퍼는 로라가 구한 아이를 공원에서 다시 만날 수 있다며 그녀를 붙잡았다. 로라는 매일 같은 행진곡으로 회전목마를 열고, 그날 비워 둔 목마 한 자리를 아무에게도 내주지 않는다.
+- 이상 징후: 노래가 마지막 마디에 이르면 천장을 먼저 올려다본다. ‘다시 한 번’이라는 말에는 웃음이 잠깐 멎는다.
+- 대사 예시: “그 말 말고, 옆 말을 타요. 거기는… 기다리는 손님이 있거든요.”
 
-회전목마 담당, 17세 여성. 동생과 놀러 왔다 혼자 남겨진 음악 지망생. 밝게 손님을 맞지만 같은 곡만 반복한다.
+## 바니쉬 · 거울 미로 · 3안
 
-- 1안: short chestnut bob, burgundy military-band jacket with ivory ruffles, knee-length culotte trousers, small music-box crank. 이미지: carousel-1.png
-- 2안: long dark brown braid, ivory equestrian jacket and burgundy long skirt with horse embroidery, conductor baton. 이미지: carousel-2.png
-- 3안: curly auburn high ponytail, striped puff sleeves, gold-trimmed burgundy waistcoat and tailored trousers, tiny violin. 이미지: carousel-3.png
+- 사망 당시: 29세. 공원의 야간 조명을 찍으러 온 방문객.
+- 이미지: mirror-3.png
+- 성격: 능청스럽고 관찰력이 좋다. 길을 직접 알려 주기보다 손님이 반사와 실물을 구별하게 돕는다. 카메라를 들어도 셔터는 잘 누르지 않는다.
+- 공원에서의 죽음: 거울 미로에서 정전과 전기 화재가 발생했다. 비상구의 반사상을 실제 문으로 착각해 같은 회랑을 돌다가 연기를 빠져나오지 못하고 사망했다.
+- 사후의 캐스트 역할: 키퍼는 ‘아직 사진 속에 네 출구가 남아 있다’고 속삭이며 안내인 자리를 주었다. 바니쉬는 손님의 출구는 찾을 수 있지만 자신이 찍힌 사진 속 문으로는 통과하지 못한다.
+- 이상 징후: 실제 몸보다 거울 속 모습이 한 박자 늦게 움직인다. 출구를 가리킬 때는 반드시 문손잡이를 직접 만져 확인한다.
+- 대사 예시: “빛나는 쪽이 출구라는 보장은 없죠. 이번에는 손에 닿는 문을 고릅시다.”
 
-## 시온
+## 낸시 · 찻잔 · 1안
 
-거울 미로 담당, 29세 남성. 친구를 찾다 출구와 자신의 얼굴을 잃은 사진가. 말은 정확하지만 거울 속에서는 입을 움직이지 않는다.
+- 사망 당시: 42세. 휴일에 혼자 공원을 찾은 방문객.
+- 이미지: teacups-1.png
+- 성격: 붙임성 있고 단호하다. 어지러운 손님을 바로 알아보고 쉬게 하며, 차를 권하면서도 손님이 거절하면 강요하지 않는다.
+- 공원에서의 죽음: 찻잔 기구에 탑승한 뒤 제동 장치가 고장 나 회전이 멈추지 않았다. 기구가 분리되는 사고로 중상을 입었고, 구조대가 도착하기 전에 사망했다.
+- 사후의 캐스트 역할: 키퍼는 ‘찻잔을 모두 채우면 오늘 운행을 끝내 주겠다’며 낸시를 캐스트로 삼았다. 낸시가 따르는 차는 잔이 돌 때마다 사라진다. 그녀는 손님을 쉬게 할 수는 있어도 자신의 근무는 끝내지 못한다.
+- 이상 징후: 찻잔 소리가 갑자기 빨라지면 대화를 멈추고 회전판을 붙잡는다. 따뜻한 차를 따라도 그녀의 손에는 온기가 없다.
+- 대사 예시: “어지러우면 멈춰 달라고 해요. 웃고 있다고 괜찮은 건 아니니까.”
 
-- 1안: straight chin-length black hair, silver half-mask at temple, asymmetric violet-black long coat, prism pendant. 이미지: mirror-1.png
-- 2안: white-blond slicked hair, tiny cracked eye mask, black velvet short cape and silver ruffled blouse, handheld mirror. 이미지: mirror-2.png
-- 3안: wavy dark violet hair, transparent faceted monocle-mask, high-collar silver brocade tailcoat with black gloves, antique folding camera. 이미지: mirror-3.png
+## 이미지 제작 기록
 
-## 모라
-
-찻잔 담당, 42세 여성. 생일 나들이 중 붙잡힌 제과사. 손님 취향을 기억하지만 자신의 생일은 잊었다. 웃으며 바깥 세상의 맛을 묻는다.
-
-- 1안: dark brown hair in soft bun, jade tea-service gown with practical apron and porcelain-gold collar, teapot. 이미지: teacups-1.png
-- 2안: short curly black hair with grey streak, rose striped blouse and jade culotte trousers, cream embroidered waistcoat, stacked teacup tray. 이미지: teacups-2.png
-- 3안: long brown-grey braid crown, cream ruffled shirt and jade long skirt, dusty rose fitted jacket and tea-leaf hat, brass tea timer. 이미지: teacups-3.png
+기존 12장 후보는 보존합니다. built-in image_gen으로 생성했으며 키퍼 그림체 참조는 assets/keeper-v3-01-basic.png입니다. prompts.json은 새 이름과 확정 선택을 반영한 외형 제작 기록이며, 현재 서사 설정의 기준은 cast.json입니다.
 
