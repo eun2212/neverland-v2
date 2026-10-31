@@ -127,13 +127,13 @@ window.neverlandWorld={
  reset(){config={paused:true,free:false,intro:false,keeperIntroduced:false,ride:0,cleared:[],clues:[],exit:false};passage=null;passageReturn=null;fractureUnlocked=false;glitchRemaining=0;glitchCount=0;interior=null;parkReturn=null;exitRevealAge=-1;exitRevealLast=elapsed;exitRevealAnnounced=false;exitRevealCount=0;zone=0;currentMap='deck';build();started=true;keeperVisible=false;Object.assign(player,layout.spawn);player.pitch=0;keys.clear();runUntil={};},
  animateRide(i){runUntil[rides[i].id]=elapsed+24;},
  audio(){initAudio();},
- mute(){muted=!muted;if(audio)audio.master.gain.setTargetAtTime(muted?0:.18,audio.currentTime,.1);return muted;},
+ mute(){muted=!muted;window.NEVERLAND_BGM?.mute(muted);if(audio)audio.master.gain.setTargetAtTime(muted?0:.18,audio.currentTime,.1);return muted;},
  notify:toast,
  get state(){return{player:{...player},keeper:{...keeper},elapsed,passage:passage?{...passage}:null,reality:{unlocked:fractureUnlocked,glitchCount,glitch:glitchRemaining>0?(.5+.5*Math.sin(glitchRemaining*3.4)**2):0},interior:interior?{...interior}:null,running:{...runUntil},zone,config:{...config},exitReveal:{age:exitRevealAge,count:exitRevealCount,announced:exitRevealAnnounced},nearest:nearest(),glError:gl.getError()};}
 };
 
 // Music is synthesized locally and begins only inside the user's start gesture.
-function initAudio(){if(audio){audio.resume();return;}const AC=window.AudioContext||window.webkitAudioContext;if(!AC){toast('이 브라우저에서는 배경음을 지원하지 않습니다.');return;}audio=new AC();const master=audio.createGain();master.gain.value=muted?0:.18;master.connect(audio.destination);audio.master=master;const delay=audio.createDelay(2);delay.delayTime.value=.43;const feedback=audio.createGain();feedback.gain.value=.24;delay.connect(feedback);feedback.connect(delay);delay.connect(master);audio.delay=delay;let beat=0;const chords=[[130.81,164.81,196,246.94],[110,130.81,164.81,196],[87.31,130.81,174.61,220],[98,146.83,196,246.94]];function schedule(){if(!audio||audio.state==='closed')return;let now=audio.currentTime;const chord=chords[Math.floor(beat/8)%4];for(let j=0;j<4;j++)tone(chord[j],now,.9,.042,'sine');tone(chord[(beat*3)%4]*2,now,.65,.09,'triangle');beat++;}schedule();audioTimer=setInterval(schedule,1150);}
+function initAudio(){window.NEVERLAND_BGM?.start();if(audio){audio.resume();return;}const AC=window.AudioContext||window.webkitAudioContext;if(!AC){toast('이 브라우저에서는 배경음을 지원하지 않습니다.');return;}audio=new AC();const master=audio.createGain();master.gain.value=muted?0:.18;master.connect(audio.destination);audio.master=master;const delay=audio.createDelay(2);delay.delayTime.value=.43;const feedback=audio.createGain();feedback.gain.value=.24;delay.connect(feedback);feedback.connect(delay);delay.connect(master);audio.delay=delay;let beat=0;const chords=[[130.81,164.81,196,246.94],[110,130.81,164.81,196],[87.31,130.81,174.61,220],[98,146.83,196,246.94]];function schedule(){if(!audio||audio.state==='closed')return;let now=audio.currentTime;const chord=chords[Math.floor(beat/8)%4];for(let j=0;j<4;j++)tone(chord[j],now,.9,.042,'sine');tone(chord[(beat*3)%4]*2,now,.65,.09,'triangle');beat++;}if(!window.NEVERLAND_BGM){schedule();audioTimer=setInterval(schedule,1150);}}
 function tone(freq,time,duration,volume,type='sine'){if(!audio)return;const osc=audio.createOscillator(),gain=audio.createGain();osc.type=type;osc.frequency.value=freq;gain.gain.setValueAtTime(0,time);gain.gain.linearRampToValueAtTime(volume,time+.035);gain.gain.exponentialRampToValueAtTime(.0001,time+duration);osc.connect(gain);gain.connect(audio.master);gain.connect(audio.delay);osc.start(time);osc.stop(time+duration+.02);osc.onended=()=>{osc.disconnect();gain.disconnect();};}
 function note(freq,duration){if(audio)tone(freq,audio.currentTime,duration,.12,'triangle');}
 $('interact').onclick=interact;
@@ -151,3 +151,4 @@ requestAnimationFrame(frame);
 window.neverlandRenderer={get state(){return{currentMap,phase,started,keeperVisible,keeperLoaded,met,firstRide,cleared:[...cleared],player:{...player},active:active?.type,glError:gl.getError()};}};
 
 })();
+

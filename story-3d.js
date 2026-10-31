@@ -31,7 +31,7 @@ function sync3d(){
  restrictForcedChoices3d();
  document.body.classList.toggle('exploring',roaming);document.body.classList.toggle('forced-boarding',forcedRide3d!==null);
  document.getElementById('world-caption').hidden=!roaming;
- world3d.configure({paused:!roaming||!!window.carnivalScene?.overview,free:free3d,intro:intro3d,keeperIntroduced:s.keeperIntroduced,keeperRed,forcedRide:forcedRide3d===null?-1:forcedRide3d,ride:s.ride,cleared:[...s.cleared],clues:[...s.clues],exit:s.exit,exitRide:s.exitRide,target:target3d,confronting:confronting3d});
+ world3d.configure({storyPhase:s.phase,paused:!roaming||!!window.carnivalScene?.overview,free:free3d,intro:intro3d,keeperIntroduced:s.keeperIntroduced,keeperRed,forcedRide:forcedRide3d===null?-1:forcedRide3d,ride:s.ride,cleared:[...s.cleared],clues:[...s.clues],exit:s.exit,exitRide:s.exitRide,target:target3d,confronting:confronting3d});
  if(inPassage){$('walk-title').textContent='장막 너머';$('walk-objective').textContent=world3d.state.passage.progress<.8?'W / ↑ · 앞으로 걸으세요.':'그들은 사라진 것이 아니었다. 놀이기구가 되어 남아 있었다.';$('ride-panel').hidden=true;return;}
  $('walk-title').textContent=world3d.state.interior?window.NEVERLAND_INTERIORS[world3d.state.interior.ride].name:rides[s.ride].name+' · 네버랜드';
  $('walk-progress').textContent='정상 탑승 '+s.cleared.size+' / 5 · 조사한 흔적 '+s.clues.size+' / 5';
@@ -157,3 +157,4 @@ new MutationObserver(sync3d).observe($('overlay'),{childList:true});
 // Read-only snapshot for QA; narrative state stays in the original engine.
 window.neverland={get state(){return{forcedRide:forcedRide3d,survivedRides:s.survivedRides||0,keeperRed:keeperRedLevel3d(),phase:s.phase,ride:s.ride,gender:s.gender,temper:s.temper,keeperIntroduced:s.keeperIntroduced,visited:[...s.visited],cleared:[...s.cleared],clues:[...s.clues],ending:s.ending,exit:s.exit,free:free3d,world:world3d.state};}};
 newGame();
+
