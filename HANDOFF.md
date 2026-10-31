@@ -84,3 +84,8 @@ design-candidates에는 현재 작업 폴더에 남은 이미지·프롬프트·
 ## 2026-10-31 관절인형 전환
 
 사람 모습의 로스트보이즈와 대화 퀘스트를 폐기했습니다. lost-boys.js는 이제 Three.js 관절인형과 말없는 사물 상호작용입니다. 캐스트 이미지와 design-candidates 설정은 이전 디자인 보관용이며 런타임에 로드하지 않습니다. 현재 동작은 LOST-BOYS.md를 참조하세요.
+
+## 2026-11-01 엔딩 공간
+
+ending-world.js가 기존 다섯 결말을 전용 보행 공간에 연결합니다. 엔딩 CG는 기존·신규 모두 표시하지 않습니다. 일러스트 채택은 사용자 결정 대기이며 design-candidates/endings-v2는 보관용 후보입니다. ENDING-WORLDS.md와 verify-ending-world.cjs를 함께 확인하세요.
+

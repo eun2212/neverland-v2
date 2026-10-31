@@ -3,7 +3,7 @@
 const tracks={profile:'assets/bgm-profile-original.wav',main:'assets/bgm-main-B.wav',captain:'assets/bgm-captain-B.wav',wheel:'assets/bgm-wheel-B.wav',carousel:'assets/bgm-carousel-A.wav',mirror:'assets/bgm-mirror-A.wav',tea:'assets/bgm-tea-A.wav',exit:'assets/bgm-exit-C.wav',monochrome:'assets/bgm-monochrome-C.wav'};
 const rideKeys=['captain','wheel','carousel','mirror','tea'];
 let started=false,muted=false,hidden=false,current='profile',active=null,previous=null,fade=1,last=0;
-function cue(state,phase){if(phase==='profile')return 'profile';if(phase==='ending')return 'main';if(state.passage)return 'monochrome';if(state.config.confronting)return 'exit';if(state.interior)return rideKeys[state.interior.ride];
+function cue(state,phase){if(phase==='profile')return 'profile';if(phase==='ending')return 'main';if(state.config.epilogue)return state.config.epilogue===4?'exit':'main';if(state.passage)return 'monochrome';if(state.config.confronting)return 'exit';if(state.interior)return rideKeys[state.interior.ride];
  const p=state.player;let nearest='main',best=9;for(const r of window.NEVERLAND_LAYOUT.rides){const d=Math.hypot(p.x-r.control[0],p.z-r.control[1]);if(d<best){best=d;nearest=r.id;}}return nearest;}
 function play(a){if(!a||muted||hidden)return;try{const result=a.play();result?.catch(()=>{});}catch(e){}}
 function switchTo(key){current=key;if(!started)return;if(active?.dataset.cue===key)return;
@@ -17,4 +17,5 @@ document.addEventListener('visibilitychange',()=>{hidden=!!document.hidden;if(hi
 function gesture(){if(!started&&current==='profile')start();else if(started)play(active);}document.addEventListener('pointerdown',gesture);document.addEventListener('keydown',gesture);
 window.NEVERLAND_BGM={tracks,cue,start,mute,update(state,phase){switchTo(cue(state,phase));},get state(){return{started,muted,current,fading:!!previous};}};
 })();
+
 

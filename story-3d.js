@@ -25,6 +25,7 @@ function requireRide3d(){
 }
 function sync3d(){
  if(!s)return;
+ if(world3d.state.config.epilogue&&window.NEVERLAND_ENDING){window.NEVERLAND_ENDING.sync();return;}
  const keeperRed=keeperRedLevel3d();$('keeper-red-matrix').setAttribute('values',[1-keeperRed,0,0,0,keeperRed,0,1-keeperRed,0,0,keeperRed*.02,0,0,1-keeperRed,0,keeperRed*.01,0,0,0,1,0].join(' '));$('keeper').dataset.corruption=String(keeperRed);const veinURL=window.NEVERLAND_KEEPER_VEINS?.maskURL(keeperRed);if(veinURL)$('keeper-vein-image').setAttribute('href',veinURL);
  const roaming=$('stage').classList.contains('walking')&&!$('overlay').children.length&&s.phase!=='ending';
  const inPassage=!!world3d.state.passage;document.body.classList.toggle('fracture-walk',inPassage);
@@ -111,6 +112,7 @@ function finishFracture3d(){
 }
 
 world3d.connect(action=>{
+ if(action.type==='epilogue'){window.NEVERLAND_ENDING.interact();return;}
  if(action.type==='cast'||action.type==='cast-clue'){window.NEVERLAND_CAST.interact(action);return;}
  if(action.type==='interior-leave'){returnToPark();return;}
  if(action.type==='interior-seat'){if(world3d.sit())explore3d('탑승했습니다. E 또는 기구 조작 버튼으로 장치를 작동하세요. Q로 일어날 수 있습니다.');return;}
@@ -157,4 +159,5 @@ new MutationObserver(sync3d).observe($('overlay'),{childList:true});
 // Read-only snapshot for QA; narrative state stays in the original engine.
 window.neverland={get state(){return{forcedRide:forcedRide3d,survivedRides:s.survivedRides||0,keeperRed:keeperRedLevel3d(),phase:s.phase,ride:s.ride,gender:s.gender,temper:s.temper,keeperIntroduced:s.keeperIntroduced,visited:[...s.visited],cleared:[...s.cleared],clues:[...s.clues],ending:s.ending,exit:s.exit,free:free3d,world:world3d.state};}};
 newGame();
+
 
