@@ -1,0 +1,58 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "assets/keeper-v3-01-basic.png",
+  "basePrompt": "Use case: illustration-story. NEW polished landscape game ending CG, horizontal 3:2 cinematic composition. Reference image is Keeper identity and visual style only. Match copper curly hair, delicate warm linework, luminous painterly watercolor/gouache anime storybook rendering, elaborate fine gold detailing. Preserve same Keeper identity. Protagonist face must be unseen to work for any player gender, adult neutral back-view. No lettering, no typography, no watermark. ",
+  "status": "15 candidates; awaiting user selection",
+  "endings": [
+    {
+      "id": 1,
+      "label": "새로운 키퍼",
+      "scene": "The protagonist seen only from behind in white shirt red cardigan black trousers takes an ornate green top hat from the copper-haired Keeper at a dawn-lit control desk in the amusement park. A new caretaker accepting responsibility, old Keeper relieved and vulnerable. No romance pose.",
+      "variants": [
+        "wide symmetrical entrance and control booth, golden dawn",
+        "close diagonal composition hands passing the hat, rides visible beyond",
+        "medium shot two figures beside open park gates, visitor safety plans on desk"
+      ]
+    },
+    {
+      "id": 2,
+      "label": "새벽의 출구",
+      "scene": "First-person or back-view protagonist in white shirt red cardigan black trousers physically steps across open amusement park exit gates into brilliant soft dawn light, leaving the magical carnival behind. Keeper with copper hair and green gold coat stands far behind, hand lowered, bittersweet solitude.",
+      "variants": [
+        "wide behind protagonist, luminous threshold centered",
+        "first-person reaching toward daylight through ornate double gates",
+        "side view silhouette crossing threshold with a small paper star in hand"
+      ]
+    },
+    {
+      "id": 3,
+      "label": "끝나지 않는 왈츠",
+      "scene": "Copper-haired Keeper in exact reference green-gold ornate outfit and star masquerade mask gently holds adult protagonist's hand in a lavish restored magical amusement park at night. Protagonist back-facing only, red cardigan white shirt black trousers. Tender romantic ending, no kiss required, luxurious green red gold carnival, ferris wheel and carousel glitter warmly. Both freely choosing closeness.",
+      "variants": [
+        "wide couple side by side beneath golden carousel lights",
+        "medium intimate hand-holding, Keeper smiles softly looking at protagonist",
+        "dreamlike wide promenade, two figures beginning a gentle waltz under stars"
+      ]
+    },
+    {
+      "id": 4,
+      "label": "마지막 좌석",
+      "scene": "Non-gory psychological horror bad ending. First-person fading vision sees the Keeper as a completely monochromatic saturated scarlet red figure, recognizable star mask top hat coat silhouette, standing within an amusement park whose paths, rides, ferris wheel, carousel canopy and some sky have transformed into unmistakable BLACK AND WHITE CHECKERBOARD PATTERNS. Checkerboard park must be clearly visible, not just a small floor. Large creeping black vignette, no text, no blood, no injuries.",
+      "variants": [
+        "red Keeper centered in distance, sweeping checkered park panorama, black vignette at edges",
+        "low seated viewpoint from broken amusement ride, red Keeper approaches, checkered ferris wheel and buildings beyond",
+        "red Keeper close to sealed ornate exit, checkerboard carousel and walkway recede into darkness"
+      ]
+    },
+    {
+      "id": 5,
+      "label": "우리가 설계할 내일",
+      "scene": "Daylit university design studio. The same copper-haired young adult male Keeper has removed hat, mask, formal carnival outfit: casual cream shirt with rolled sleeves and dark green cardigan, natural face, warm restrained smile. He begins collaborative theme-park model design with adult protagonist seen from back wearing red cardigan white shirt black trousers. Desk has small safe amusement ride scale models, drawings, cutting mat. Ordinary hopeful shared life, visual identity same Keeper, no magic costume.",
+      "variants": [
+        "wide sunlit studio two adjacent desks, pair starting a model together",
+        "medium desk-height view Keeper offers pencil and waits for protagonist response",
+        "over-the-shoulder protagonist hands a drawing to Keeper, morning windows and architectural model"
+      ]
+    }
+  ]
+}
