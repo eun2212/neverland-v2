@@ -114,6 +114,7 @@ function drawMarkers(){
 window.neverlandWorld={
  enterEpilogue(id){interior=null;parkReturn=null;passage=null;config={...config,paused:false,free:true,exit:false,keeperRed:0,confronting:false,forcedRide:-1,epilogue:id,storyPhase:'epilogue'};Object.assign(player,{x:0,z:id===3?-8:5,yaw:0,pitch:0,eye:1.65});keys.clear();document.exitPointerLock?.();},
  finishEpilogue(){config={...config,paused:true,epilogue:0,storyPhase:'ending'};keys.clear();},
+ sitEpilogue(){if(config.epilogue!==5)return false;Object.assign(player,{x:-2,z:.2,yaw:-1.1,pitch:-.05,eye:1.1});keys.clear();return true;},
  connect(actions,zones){actionCallback=actions;zoneCallback=zones;},
  enterPassage(){if(passage)return false;if(interior&&!this.leaveRide())return false;passageReturn={...player,x:0,z:-10,yaw:0,pitch:0,eye:1.65};passage={progress:0,revealHold:0};fractureUnlocked=true;Object.assign(player,{x:0,z:0,yaw:0,pitch:0,eye:1.7});keys.clear();document.exitPointerLock?.();return true;},
  fracturePulse(){if(fractureUnlocked){glitchRemaining=4;glitchCount++;}},
