@@ -1,0 +1,47 @@
+{
+  "status": "female storybook candidates only; not integrated",
+  "tool": "built-in image_gen",
+  "basePrompt": "Use case: illustration-story. Create a new landscape 3:2 female-version game-ending illustration. Input image 1 is COMPOSITION ONLY: preserve camera angle, character placement, scale, cropping and gesture. Images 2,3,4 are STYLE/MEDIUM references ONLY: playful handmade children's fairy-tale picture-book artwork, textured wax crayon, colored pencils, dry gouache, visible paper grain, softly irregular contours, simplified expressive faces, decorative collage-like stars and vegetation, luminous pastel color against deep midnight fields. Strongly transform away from glossy realistic/anime rendering of image 1. Do not copy lettering, watermark, artist signatures, exact characters or layout from style refs. Preserve character identities and the scene described, with storybook rather than polished anime proportions. Adult characters, not children. No lettering, captions, logos, watermarks, panel borders, or extra limbs. ",
+  "styleReferences": [
+    "codex-clipboard-ef0219d5-0704-4276-83d3-24dfbd6a7cb5.png",
+    "codex-clipboard-27b7c10b-11e9-426a-a2d1-ed80284da31e.png",
+    "codex-clipboard-16e28527-1433-48f9-886a-8df1a3933d53.png"
+  ],
+  "variants": [
+    "A: crisp wax-crayon and colored-pencil storybook, mint and coral peach highlights, deep indigo shadows, warm butter-yellow stars, rich visible paper grain. Expressive restrained linework, delicately joyful magic.",
+    "B: soft pastel and smudged colored-pencil fairy-tale, muted rose lavender apricot, emerald accents, charcoal midnight edges, hazy luminous atmosphere. Tactile dreamy hand-drawn quality.",
+    "C: decorative gouache and colored-pencil storybook, saturated jade turquoise chartreuse and warm orange-pink against velvety dark navy, flat interlocking color shapes, sparkling cream stars, lightly scratched and stippled paper textures."
+  ],
+  "endings": [
+    {
+      "id": 1,
+      "name": "새로운 키퍼",
+      "ref": "assets\\8801aae134a159340872.webp",
+      "scene": "Match image 1 composition precisely: first-person adult female protagonist's two red-cardigan-sleeved hands in lower foreground receive an emerald top hat and gold masquerade mask; copper curly-haired Keeper leans from the left, medium-close, gently opening his palm. KEEP this foreground handoff framing and Keeper placement. Adapt the background only to a vast black midnight archive with shelves of glass bottles containing small star-souls, constellation arches and delicate gold particles leaving Keeper's body. Bittersweet passing of a role. Female face is NOT visible."
+    },
+    {
+      "id": 2,
+      "name": "새벽의 출구",
+      "ref": "assets\\ebca2f79a13b30966cfa.webp",
+      "scene": "Match image 1 ground-level LOW CAMERA composition precisely: black trouser legs and glossy black shoes of an adult female protagonist step over a luminous threshold, one red-cardigan-sleeved hand holds a small paper star at upper right. No head or face in frame. Ornate star gates occupy left and midground, dawn opens to right. Adapt gates to a black star-bottle gallery opening into warm white dawn. Far behind gates, a very small grayscale Keeper is left standing, hand lowered, accepting her departure, not grabbing her."
+    },
+    {
+      "id": 3,
+      "name": "끝나지 않는 왈츠",
+      "ref": "assets\\700710c249279cd0dffc.webp",
+      "scene": "Match image 1 composition precisely: a full adult couple dancing a gentle waltz, centered in a restored magical amusement park, female protagonist in foreground seen from BACK, long dark hair with small burgundy ribbon, red cardigan over white shirt and black trousers; her FACE MUST BE HIDDEN. Copper curly-haired young adult Keeper faces her and viewer, green-gold long coat and ornate top hat, holding her raised hand at upper right, other hand at her waist. Ferris wheel to the left, star canopy overhead, constellation floor. Voluntary tender romance, no text."
+    },
+    {
+      "id": 4,
+      "name": "마지막 좌석",
+      "ref": "design-candidates\\endings-v2\\ending-4-1.png",
+      "scene": "Match image 1 composition precisely: first-person adult female passenger looking slightly upward from a low ride-seat viewpoint, Keeper full-body centered extending one hand, huge ferris wheel left, carousel right, looming BLACK AND WHITE CHECKERBOARD architecture and ground, closing black vignette. Keeper alone is COMPLETELY MONOCHROMATIC SCARLET RED head to toe including hat, star mask, coat, skin, hair and hands; no multicolor clothes. Faint red cardigan sleeves at bottom edge may signal female POV, no face. Eerie fairy tale, NO blood, injury, corpses, violence or text."
+    },
+    {
+      "id": 5,
+      "name": "우리가 설계할 내일",
+      "ref": "assets\\a40db5fd07163f665c43.webp",
+      "scene": "Match image 1 composition precisely: FIRST-PERSON female college student's slender red-cardigan sleeves and hands work on a small theme-park model in lower foreground, copper curly-haired young adult male friend sits across desk in upper center, rests cheek on one hand, points at model with other hand, smiles playfully. Her face is not visible. He wears CASUAL plain cream shirt with rolled sleeves and simple dark green cardigan, NO hat, NO mask, NO gold costume or royal brooch. They are cheerful university friends in a new life, NOT remembering past events, no memorials or sad responsibility. Wide mystical college design studio with many desks, starry windows, books, constellation mobiles, delightful handmade carousel and ferris-wheel miniatures on worktable."
+    }
+  ]
+}
