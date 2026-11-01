@@ -1,0 +1,36 @@
+{
+  "name": "아직 적용 안 한 일러스트",
+  "integrated": false,
+  "selected": [
+    {
+      "ending": 1,
+      "name": "새로운 키퍼",
+      "candidate": 1,
+      "file": "ending-1-1.png"
+    },
+    {
+      "ending": 2,
+      "name": "새벽의 출구",
+      "candidate": 3,
+      "file": "ending-2-3.png"
+    },
+    {
+      "ending": 3,
+      "name": "끝나지 않는 왈츠",
+      "candidate": 1,
+      "file": "ending-3-1.png"
+    },
+    {
+      "ending": 4,
+      "name": "마지막 좌석",
+      "candidate": 2,
+      "file": "ending-4-2.png"
+    },
+    {
+      "ending": 5,
+      "name": "우리가 설계할 내일",
+      "candidate": 2,
+      "file": "ending-5-2.png"
+    }
+  ]
+}
