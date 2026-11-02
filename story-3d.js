@@ -6,7 +6,7 @@ let free3d=false,intro3d=false,firstLever3d=false,atControl3d=false,atExit3d=fal
 const controls3d=window.NEVERLAND_LAYOUT.rides.map(r=>r.control);
 const cluePositions3d=window.NEVERLAND_LAYOUT.clues;
 let pendingRideResult=null,forcedRide3d=null;
-function updateRideUI(){const state=world3d.state,d=state.interior;if(state.passage)return;$('ride-panel').hidden=!d;document.body.classList.toggle('inside-ride',!!d);if(!d)return;const roaming=$('stage').classList.contains('walking')&&!$('overlay').children.length;$('ride-status').textContent=d.running?'탑승 중 · '+Math.round(d.progress*100)+'%':d.ride===3?(d.solved?'봉인 해제 · 반대편 빛의 문으로 걸어가세요.':'거울 사이로 길을 찾아 빛 장치를 조작하세요.'):d.seated?'좌석에 앉았습니다 · E로 조작 / Q로 일어나기':'기구 안을 걸어 둘러보세요 · 좌석 근처에서 E';$('ride-progress').value=d.progress;$('ride-progress').hidden=!d.running;$('ride-operate').disabled=d.running||!roaming||(d.ride!==3&&!d.seated);$('ride-stand').disabled=d.running||!d.seated||!roaming||forcedRide3d!==null;$('ride-return').disabled=d.running||!roaming||forcedRide3d!==null;}
+function updateRideUI(){const state=world3d.state,d=state.interior;if(state.passage)return;$('ride-panel').hidden=!d;document.body.classList.toggle('inside-ride',!!d);if(!d)return;const roaming=$('stage').classList.contains('walking')&&!$('overlay').children.length;$('ride-status').textContent=d.running?'탑승 중 · '+Math.round(d.progress*100)+'%':d.ride===3?('흑백 거울 미로 · 길을 찾아 반대편 흰 출구에서 E'):d.seated?'좌석에 앉았습니다 · E로 조작 / Q로 일어나기':'기구 안을 걸어 둘러보세요 · 좌석 근처에서 E';$('ride-progress').value=d.progress;$('ride-progress').hidden=!d.running;$('ride-operate').hidden=d.ride===3;$('ride-stand').hidden=d.ride===3;$('ride-operate').disabled=d.running||!roaming||(d.ride!==3&&!d.seated);$('ride-stand').disabled=d.running||!d.seated||!roaming||forcedRide3d!==null;$('ride-return').disabled=d.running||!roaming||forcedRide3d!==null;}
 function returnToPark(){if(!world3d.leaveRide()){world3d.notify('움직이는 동안에는 탑승을 마칠 때까지 기다려 주세요.');return;}pendingRideResult=null;explore3d('기구 입구로 돌아왔습니다. 다른 구역을 걸어서 둘러보세요.');}
 function interiorMap3d(){const state=world3d.state,d=window.NEVERLAND_INTERIORS[state.interior.ride],b=d.bounds,p=state.player;modal('<h1>'+d.name+'</h1><p>붉은 점은 현재 위치, 금빛 원은 좌석, 초록 문은 공원으로 돌아가는 곳입니다.</p><div class="position-map"><svg viewBox="'+(b[0]-2)+' '+(b[2]-2)+' '+(b[1]-b[0]+4)+' '+(b[3]-b[2]+4)+'" role="img" aria-label="놀이기구 내부 지도"><rect x="'+b[0]+'" y="'+b[2]+'" width="'+(b[1]-b[0])+'" height="'+(b[3]-b[2])+'" fill="#e1c993"/>'+d.walls.map(([x,z,w,h])=>'<rect x="'+(x-w/2)+'" y="'+(z-h/2)+'" width="'+w+'" height="'+h+'" fill="#335b4b"/>').join('')+(d.seat?'<circle cx="'+d.seat[0]+'" cy="'+d.seat[1]+'" r=".7" fill="#e4b44b"/>':'')+'<rect x="'+(d.control[0]-.4)+'" y="'+(d.control[1]-.4)+'" width=".8" height=".8" fill="#ad343a"/><circle cx="'+d.exit[0]+'" cy="'+d.exit[1]+'" r=".65" fill="#386a46"/>'+(d.finish?'<circle cx="'+d.finish[0]+'" cy="'+d.finish[1]+'" r=".65" fill="#e7e9ba"/>':'')+'<circle cx="'+p.x+'" cy="'+p.z+'" r=".4" fill="#c43146" stroke="#fff" stroke-width=".15"/></svg></div><button id="inside-map-close">닫기</button>');$('inside-map-close').onclick=()=>explore3d();}
 function keeperRedLevel3d(){return s.exit||confronting3d?1:Math.min(.95,(s.survivedRides||0)*.19);}
@@ -18,7 +18,7 @@ function restrictForcedChoices3d(){
  for(const b of buttons){if(b.onclick===b._forcedGuard)continue;const action=b.onclick;b._forcedGuard=function(){action?.();restrictForcedChoices3d();};b.onclick=b._forcedGuard;}
 }
 function requireRide3d(){
- if(s.phase==='ending'||world3d.state.passage)return;forcedRide3d=s.ride;sync3d();
+ if(s.phase==='ending'||world3d.state.passage)return;forcedRide3d=s.ride;sync3d();if(s.ride===3){world3d.forceBoard(3);pendingRideResult={kind:'mirror',help:false,risk:false};explore3d('흑백 미로의 흰 출구를 찾으세요. 출구에서 E를 누르면 탑승을 마칩니다.');return;}
  story([['키퍼','질문은 여기까지예요. 자, 이제 타세요. 이번 기구를 마칠 때까지는 다른 곳으로 갈 수 없어요.'],['','키퍼가 출입 고리를 잠근다. 웃는 얼굴과 달리 손에는 망설임이 없다.'],['키퍼','다녀오면 또 이야기해 드릴게요. 저를 기다리게 하지는 말아요.']],()=>{
   close();world3d.forceBoard(forcedRide3d);atControl3d=true;try{original3d.openPuzzle();}finally{atControl3d=false;}sync3d();
  });
@@ -33,7 +33,7 @@ function sync3d(){
  document.body.classList.toggle('exploring',roaming);document.body.classList.toggle('forced-boarding',forcedRide3d!==null);
  document.getElementById('world-caption').hidden=!roaming;
  world3d.configure({storyPhase:s.phase,paused:!roaming||!!window.carnivalScene?.overview,free:free3d,intro:intro3d,keeperIntroduced:s.keeperIntroduced,keeperRed,forcedRide:forcedRide3d===null?-1:forcedRide3d,ride:s.ride,cleared:[...s.cleared],clues:[...s.clues],exit:s.exit,exitRide:s.exitRide,target:target3d,confronting:confronting3d});
- if(inPassage){$('walk-title').textContent='장막 너머';$('walk-objective').textContent=world3d.state.passage.progress<.8?'W / ↑ · 앞으로 걸으세요.':'그들은 사라진 것이 아니었다. 놀이기구가 되어 남아 있었다.';$('ride-panel').hidden=true;return;}
+ if(inPassage){$('walk-title').textContent='장막 너머';$('walk-objective').textContent='뒤에서 키퍼의 목소리가 들린다. “제 목소리 들려요? 이제 눈을 떠요.” · 마우스 드래그 / ← →로 뒤를 돌아보세요.';$('ride-panel').hidden=true;return;}
  $('walk-title').textContent=world3d.state.interior?window.NEVERLAND_INTERIORS[world3d.state.interior.ride].name:rides[s.ride].name+' · 네버랜드';
  $('walk-progress').textContent='정상 탑승 '+s.cleared.size+' / 5 · 조사한 흔적 '+s.clues.size+' / 5';
  updateRideUI();
@@ -86,7 +86,7 @@ arriveAtRide=function(i){
  explore3d(rides[i].name+' 구역에 도착했습니다. 키퍼, 조작대, 금빛 흔적을 찾아보세요.');
 };
 openPuzzle=function(){
- if(!atControl3d){const inside=world3d.state.interior;if(inside){if(inside.ride!==3&&inside.seated){original3d.openPuzzle();sync3d();return;}explore3d(inside.ride===3?'회랑 안쪽의 빛 장치까지 걸어가 E를 누르세요.':'좌석에 다가가 E로 탑승한 뒤 장치를 조작하세요.');return;}target3d=controls3d[s.ride];explore3d(rides[s.ride].name+' 입구에 다가가 E로 내부 공간에 들어가세요.');return;}
+ if(!atControl3d){const inside=world3d.state.interior;if(inside){if(inside.ride!==3&&inside.seated){original3d.openPuzzle();sync3d();return;}explore3d(inside.ride===3?'흑백 미로의 반대편 흰 출구를 찾아 E를 누르세요.':'좌석에 다가가 E로 탑승한 뒤 장치를 조작하세요.');return;}target3d=controls3d[s.ride];explore3d(rides[s.ride].name+' 입구에 다가가 E로 내부 공간에 들어가세요.');return;}
  original3d.openPuzzle();sync3d();
 };
 success=function(help,risk=false){if(world3d.state.interior){close();if(s.ride===3){pendingRideResult={kind:'mirror',help,risk};world3d.unlockInterior();explore3d('거울의 봉인이 풀렸습니다. 회랑 반대편 빛의 출구까지 직접 걸어가세요.');return;}pendingRideResult={kind:'normal',help,risk};if(world3d.startRide()){explore3d('안전 장치가 잠겼습니다. 탑승한 자리에서 주변을 둘러보세요.');return;}pendingRideResult=null;world3d.notify('먼저 좌석에 앉아 주세요.');return;}world3d.animateRide(s.ride);commitSafeRide3d(help,risk);sync3d();};
@@ -118,7 +118,7 @@ world3d.connect(action=>{
  if(action.type==='interior-seat'){if(world3d.sit())explore3d('탑승했습니다. E 또는 기구 조작 버튼으로 장치를 작동하세요. Q로 일어날 수 있습니다.');return;}
  if(action.type==='ride-running'){world3d.notify('탑승 중입니다. 마우스나 방향키로 주변을 둘러보세요.');return;}
  if(action.type==='mirror-locked'){world3d.notify('빛 장치를 풀어야 이 출구의 봉인이 열립니다.');return;}
- if(action.type==='mirror-finish'){world3d.fracturePulse();const result=pendingRideResult;if(result?.kind==='mirror'){pendingRideResult=null;releaseForcedRide3d();world3d.leaveRide();world3d.animateRide(s.ride);commitSafeRide3d(result.help,result.risk);sync3d();}return;}
+ if(action.type==='mirror-finish'){world3d.fracturePulse();const result=pendingRideResult||{kind:'mirror',help:false,risk:false};if(result?.kind==='mirror'){pendingRideResult=null;releaseForcedRide3d();world3d.leaveRide();world3d.animateRide(s.ride);commitSafeRide3d(result.help,result.risk);sync3d();}return;}
  if(action.type==='passage-complete'){finishFracture3d();return;}
  if(action.type==='ride-complete'){world3d.fracturePulse();const result=pendingRideResult;pendingRideResult=null;if(result?.kind==='tutorial'){world3d.leaveRide();beginFracture3d();}else if(result?.kind==='normal'){world3d.animateRide(s.ride);commitSafeRide3d(result.help,result.risk);}sync3d();return;}
  if(action.type==='intro'){
@@ -126,7 +126,7 @@ world3d.connect(action=>{
   if(typeof keeperOrientation3d==='function'){keeperOrientation3d();return;}
   story([['키퍼','깨어나셨군요. 저는 이곳의 키퍼입니다. 즐거운 시간 되세요.'],['키퍼','출구요? 놀이기구 중 하나가 바깥과 이어져 있어요. 우선 캡틴 훅으로 가볼까요?'],['키퍼','붉은 레버를 STOP에서 GO까지 천천히 밀어주세요. 조명, 미동, 출발 준비… 마지막이 출발입니다.']],tutorial);return;
  }
- if(action.type==='control'){if(world3d.enterRide(action.ride)){target3d=null;explore3d();}return;}
+ if(action.type==='control'){if(world3d.enterRide(action.ride)){target3d=null;if(action.ride===3)pendingRideResult={kind:'mirror',help:false,risk:false};explore3d();}return;}
  if(action.type==='interior-control'){
   const inside=world3d.state.interior;if(!inside)return;if(inside.ride!==3&&!inside.seated){world3d.notify('좌석에 가까이 가서 E로 먼저 탑승하세요.');return;}
   target3d=null;atControl3d=true;

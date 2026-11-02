@@ -67,6 +67,6 @@ window.NEVERLAND_FRACTURE={create(h){
    if(fullNow)for(const o of shaderVisibility.keys())o.visible=false;
    if(p){if(!active){scene.fog=graveFog;active=true;}graveFog.density=.145*(1-p.progress)**2+.003;follow.position.set(0,2,-p.progress*52-1);for(let i=0;i<glitches.length;i++)glitches[i].position.x=glitches[i].userData.originX+(reduced?0:Math.sin(t*1.25+i*2.1)*.09);}
    else if(active){scene.fog=savedFog;active=false;}
-   return p?{vision:p.progress,position:new T.Vector3(0,1.7+Math.max(0,p.progress-.75)*4,-p.progress*52),pitch:0.05,yaw:0}:null;
+   return p?{vision:Math.max(.55,p.progress),position:new T.Vector3(0,1.7,-p.progress*52),pitch:state.player.pitch,yaw:state.player.yaw}:null;
   },get diagnostics(){return{dolls:325,neonEyes:0,redGlitches:glitches.length,accent:'#ff100a'};}};
 }};

@@ -112,16 +112,16 @@ test(run('s.survivedRides||0')===0,'mandatory first death never changes keeper c
 test(!run('world3d.state.interior'),'graveyard leaves the ride interior');
 test(run('s.phase')==='graveyard','graveyard has a separate narrative phase');
 let passageFrame=1340;const passageFrames=n=>{for(let i=0;i<n;i++)frame(passageFrame++*1000/60);};
-handlers.keydown({key:'s',repeat:false,preventDefault(){}});handlers.keydown({key:'a',repeat:false,preventDefault(){}});handlers.keydown({key:'arrowright',repeat:false,preventDefault(){}});passageFrames(120);
+handlers.keydown({key:'s',repeat:false,preventDefault(){}});handlers.keydown({key:'a',repeat:false,preventDefault(){}});handlers.keydown({key:'arrowright',repeat:false,preventDefault(){}});passageFrames(30);
 test(run('world3d.state.passage.progress')===0,'backward and sideways input cannot advance graveyard');
-test(run('world3d.state.player.yaw')===0&&run('world3d.state.player.x')===0,'graveyard locks turning and lateral movement');
+test(Math.abs(run('world3d.state.player.yaw'))>.5&&run('world3d.state.player.x')===0,'graveyard allows turning but locks lateral movement');run('worldQA.player.yaw=0;');
 for(const key of ['s','a','arrowright'])handlers.keyup({key});
 handlers.keydown({key:'w',repeat:false,preventDefault(){}});passageFrames(360);handlers.keyup({key:'w'});
 const partialPassage=run('world3d.state.passage.progress');test(partialPassage>.2&&partialPassage<.5,'forward walking gradually opens view');passageFrames(30);
 test(run('world3d.state.passage.progress')===partialPassage,'passage never auto-walks without input');
 handlers.keydown({key:'w',repeat:false,preventDefault(){}});passageFrames(1040);handlers.keyup({key:'w'});
-test(run('world3d.state.passage.progress')===1,'whole graveyard visible before return');test(run('world3d.state.passage.revealHold')<3.2,'full revelation has a deliberate viewing hold');passageFrames(100);
-test(!run('world3d.state.passage'),'full revelation automatically teleports to park');test(run('world3d.state.player.z')===-10,'return lands in front of central captain');
+test(run('world3d.state.passage.progress')===1,'whole graveyard visible before return');passageFrames(100);test(!!run('world3d.state.passage'),'forward view never returns automatically');run('worldQA.player.yaw=Math.PI');passageFrames(60);test(!!run('world3d.state.passage'),'keeper gaze holds for at least one second');passageFrames(40);
+test(!run('world3d.state.passage'),'seeing keeper returns after 1.5 seconds');test(run('world3d.state.player.z')===-10,'return lands in front of central captain');
 test(run("$('speaker').textContent")==='키퍼'&&run("$('text').textContent").includes('어떻게'),'keeper is surprised immediately after return');
 run(`drain();test(free3d,'graveyard return unlocks full park');test(s.cleared.size===0,'first accident is not a normal ride success');world3d.fracturePulse();test(world3d.state.reality.glitchCount===1,'later ride completion can queue checker glitch');test(world3d.state.reality.glitch>0,'queued checker glitch is active');`);
 test(run('world3d.state.config.paused'),'map pauses walking');
@@ -190,3 +190,5 @@ for(const level of [.19,.38,.57,.76,.95]){
 }
 
 console.log(`PASS: ${assertions} assertions: original content parity, renderer frames/walking, profile, all 18 replies, 5 puzzles and boundaries, help/risk, clues, events/dice, exit proximity, victory/failure, 5 endings, both gender CGs, restart records.`);
+
+run("startMain();s.ride=3;sync3d();world3d.enterRide(3);explore3d();test(world3d.state.interior.solved,'mirror requires no light puzzle');test(!s.cleared.has(3),'entering maze gives no reward');worldQA.player.x=0;worldQA.player.z=-8.5;");handlers.keydown({key:'e',repeat:false,preventDefault(){}});run("test(!world3d.state.interior&&s.cleared.has(3)&&s.survivedRides===1,'maze exit alone grants one survived ride');");
