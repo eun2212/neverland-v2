@@ -2,7 +2,7 @@
 window.NEVERLAND_FRACTURE={create(h){
  'use strict';
  const {T,scene,mesh,cube,ball,cylinder,beam,torus,curve,batch,keeperSprite}=h;
- const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const reduced=()=>window.NEVERLAND_TOOLS?.settings.reduced||matchMedia('(prefers-reduced-motion: reduce)').matches;
  const uniforms={time:{value:0},full:{value:0},glitch:{value:0}},patched=new WeakSet();
  const checkCode=`vec3 rp=vRealityWorld*.82;float wobble=sin(rp.z*.7+realityTime*.38)*.38+sin(rp.x*.6-realityTime*.24)*.22;vec3 rn=abs(normalize(vRealityNormal));vec2 tile=rn.y>.55?rp.xz:rn.x>rn.z?rp.zy:rp.xy;tile.x+=wobble;float checker=mod(floor(tile.x)+floor(tile.y),2.);vec3 checkerColor=mix(vec3(.008),vec3(.92),checker)*(.62+.38*abs(dot(normalize(vRealityNormal),normalize(vec3(.3,.8,.5)))));float cell=fract(sin(dot(floor(vRealityWorld.xz*.22),vec2(12.9898,78.233))+floor(realityTime*1.5))*43758.5453);float region=smoothstep(.56,.72,cell);float realityMix=max(realityFull,realityGlitch*region);gl_FragColor.rgb=mix(gl_FragColor.rgb,checkerColor,realityMix);`;
  function patchMaterials(){scene.traverse(o=>{
@@ -60,12 +60,12 @@ window.NEVERLAND_FRACTURE={create(h){
  const savedFog=scene.fog,graveFog=new T.FogExp2(0x000000,.14);
  const checkerSky=new T.Mesh(new T.SphereGeometry(170,24,16),new T.MeshBasicMaterial({color:0xffffff,side:T.BackSide,fog:false}));checkerSky.visible=false;scene.add(checkerSky);
  let active=false,fullLast=false;const shaderVisibility=new Map();
- return{update(state,t){const p=state.passage;uniforms.time.value=reduced?0:t;uniforms.full.value=!p&&state.config.exit?1:0;uniforms.glitch.value=!p&&!state.config.exit?state.reality.glitch:0;
+ return{update(state,t){const p=state.passage;uniforms.time.value=reduced()?0:t;uniforms.full.value=!p&&state.config.exit?1:0;uniforms.glitch.value=!p&&!state.config.exit?state.reality.glitch:0;
    patchMaterials();checkerSky.visible=!!uniforms.full.value;grave.visible=!!p;
    scene.traverse(o=>{if(o.isPoints)o.visible=!p&&!state.config.exit;});
    const fullNow=!!uniforms.full.value;if(fullNow!==fullLast){scene.traverse(o=>{if(!o.isMesh||o.userData.fracture||!o.material?.isShaderMaterial)return;if(fullNow){shaderVisibility.set(o,o.visible);o.visible=false;}else if(shaderVisibility.has(o))o.visible=shaderVisibility.get(o);});fullLast=fullNow;}
    if(fullNow)for(const o of shaderVisibility.keys())o.visible=false;
-   if(p){if(!active){scene.fog=graveFog;active=true;}graveFog.density=.145*(1-p.progress)**2+.003;follow.position.set(0,2,-p.progress*52-1);for(let i=0;i<glitches.length;i++)glitches[i].position.x=glitches[i].userData.originX+(reduced?0:Math.sin(t*1.25+i*2.1)*.09);}
+   if(p){if(!active){scene.fog=graveFog;active=true;}graveFog.density=.145*(1-p.progress)**2+.003;follow.position.set(0,2,-p.progress*52-1);for(let i=0;i<glitches.length;i++)glitches[i].position.x=glitches[i].userData.originX+(reduced()?0:Math.sin(t*1.25+i*2.1)*.09);}
    else if(active){scene.fog=savedFog;active=false;}
    return p?{vision:Math.max(.55,p.progress),position:new T.Vector3(0,1.7,-p.progress*52),pitch:state.player.pitch,yaw:state.player.yaw}:null;
   },get diagnostics(){return{dolls:325,neonEyes:0,redGlitches:glitches.length,accent:'#ff100a'};}};

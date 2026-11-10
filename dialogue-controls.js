@@ -9,8 +9,8 @@
  log.innerHTML='<div class="dialogue-history-panel"><div class="dialogue-history-heading"><h2 id="dialogue-history-title">대사 로그</h2><button id="dialogue-log-close">닫기 · Esc</button></div><p class="dialogue-history-note">이번 플레이에서 지나온 대사입니다. 재시작하면 비워집니다.</p><div id="dialogue-history-lines" tabindex="0"></div></div>';
  document.body.append(log);
  const buttons={log:$('dialogue-log'),skip:$('dialogue-skip'),auto:$('dialogue-auto')};
- const delay=()=>mode==='skip'?100:Math.min(7000,Math.max(1800,($('text').textContent||'').length*65));
- function blocked(){return logOpen||document.hidden||!!$('overlay').children.length||$('stage').classList.contains('walking');}
+ const delay=()=>mode==='skip'?100:Math.min(14000,Math.max(1800,($('text').textContent||'').length*(window.NEVERLAND_TOOLS?.settings.auto||65)));
+ function blocked(){return window.NEVERLAND_TOOLS?.open||logOpen||document.hidden||!!$('overlay').children.length||$('stage').classList.contains('walking');}
  function refresh(){
   bar.hidden=!s||s.phase==='profile';
   for(const key of ['skip','auto']){buttons[key].disabled=!continuation||logOpen;buttons[key].setAttribute('aria-pressed',String(mode===key));const label=key==='auto'?'Auto':'스킵';const text=label+(mode===key?' · 켜짐':'');if(buttons[key].textContent!==text)buttons[key].textContent=text;}

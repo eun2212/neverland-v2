@@ -41,7 +41,7 @@ let exitRevealAge=-1,exitRevealLast=0,exitRevealAnnounced=false,exitRevealCount=
 let interior=null,parkReturn=null,interiorLast=0;
 let passage=null,passageReturn=null,fractureUnlocked=false,glitchRemaining=0,glitchCount=0;
 function passageStep(dt,forward){if(!passage)return;const step=Math.max(0,Math.min(.05,dt));if(forward>0&&passage.progress<1)passage.progress=Math.min(1,passage.progress+step*3.1/64);player.x=0;player.z=-passage.progress*52;player.eye=1.7;player.yaw+=((keys.has('arrowleft')?1:0)-(keys.has('arrowright')?1:0))*step*1.6;const facing=Math.cos(player.yaw)<-.82&&Math.abs(player.pitch)<.5;if(facing&&!passage.keeperSeen){passage.keeperSeen=true;passage.revealHold=0;}if(passage.keeperSeen)passage.revealHold+=step;if(passage.keeperSeen&&passage.revealHold>=1.5){passage=null;Object.assign(player,passageReturn);passageReturn=null;keys.clear();config.paused=true;actionCallback({type:'passage-complete'});}}
-function blocked(){return config.paused;}
+function blocked(){return config.paused||window.NEVERLAND_TOOLS?.open;}
 function caption(text,seconds=6){$('caption').textContent=text;captionUntil=elapsed+seconds;}
 function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),5000);}
 function advance(){}
@@ -94,7 +94,7 @@ function drawMarkers(){
  if(interior||passage)return;
  if(config.free){for(let i=0;i<cluePoints.length;i++){const p=cluePoints[i];box(p[0],.1,p[1],.65,.45,.65,config.clues.includes(i)?'#748878':'#dfc394');rod([p[0],.5,p[1]],[p[0],1.1,p[1]],.04,'#dfc394');}}
  if(config.exit){
-  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced=window.NEVERLAND_TOOLS?.settings.reduced||matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(!config.paused){
    exitRevealAge+=Math.max(0,Math.min(.05,elapsed-exitRevealLast));
    if(!exitRevealAnnounced){exitRevealAnnounced=true;toast('안개 속에 흩어진 빛이 모여, 새벽의 출구가 나타납니다. 지도에서 위치를 확인하세요.');if(audio&&!muted){for(const [i,f]of [523.25,659.25,783.99].entries())tone(f,audio.currentTime+i*.22,1.8,.07,'sine');}}
@@ -112,6 +112,8 @@ function drawMarkers(){
  drawData(new Float32Array(vertices));
 }
 window.neverlandWorld={
+ unlockFracture(){fractureUnlocked=true;},
+ jumpToPark(x,z){interior=null;parkReturn=null;passage=null;passageReturn=null;config={...config,epilogue:0,forcedRide:-1};Object.assign(player,{x,z,yaw:0,pitch:0,eye:1.65});keys.clear();runUntil={};document.exitPointerLock?.();},
  enterEpilogue(id){interior=null;parkReturn=null;passage=null;config={...config,paused:false,free:true,exit:false,keeperRed:0,confronting:false,forcedRide:-1,epilogue:id,storyPhase:'epilogue'};Object.assign(player,{x:0,z:id===3?-8:5,yaw:0,pitch:0,eye:1.65});keys.clear();document.exitPointerLock?.();},
  finishEpilogue(){config={...config,paused:true,epilogue:0,storyPhase:'ending'};keys.clear();},
  sitEpilogue(){if(config.epilogue!==5)return false;Object.assign(player,{x:-2,z:.2,yaw:-1.1,pitch:-.05,eye:1.1});keys.clear();return true;},
